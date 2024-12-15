@@ -1,0 +1,49 @@
+body {
+    font-family: arial;
+    direction: rtl;
+}
+
+h1 { text-align: center; }
+
+#main {
+    text-align: center;
+    font-size: 18px;
+}
+
+.question {
+    
+}
+
+.question .word {
+    font-weight: bold;
+}
+
+.choice {
+    text-align: center;
+    font-weight: bold;
+    padding: 2em;
+    margin: 1em;
+    margin-right: 15%; margin-left: 15%;
+    background-color: #00f0ff;
+    border: 2px solid gray;
+    border-radius: 5px;
+    
+}
+
+.choice.enable {
+    cursor: pointer;
+}
+
+.choice.enable:hover {
+    background-color: #00e0f0;
+}
+
+.choice.mistake {
+    background-color: #ff0000;
+    cursor: default;
+}
+
+.choice.correct {
+    background-color: #00a000;
+    color: white;
+}
