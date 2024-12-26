@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocquiztest</title>
+    <script src="appload.js"></script>
+    <script src="quiz.js"></script>
+    <script src="layout.js"></script>
+
+
+</head>
+<body>
+  <h1>תרגול אוצר מילים</h1>
+
+  <ul class="breadcrumb">
+    <li><a href="#">בית</a></li>
+    <li><a href="#">תלמיד</a></li>
+    <li>תרגול</li>
+  </ul> 
+  
+  <div id="main">
+
+  </div>
+
+<script>
+
+  appLoad().then ( () => {
+    let quiz = new QuizRunner();
+    quiz.run();
+  });
+  
+</script>

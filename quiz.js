@@ -163,7 +163,7 @@ class Quiz {
             this.test.words.push([String(this.#wordlist[i].word), String(this.#wordlist[i].value)]);
             this.test.choices.push(String(this.#wordlist[i].value));
 
-            if (this.test.words.length == 10)
+            if (this.test.words.length == 5)
                 break;
         }
 

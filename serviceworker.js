@@ -1,16 +1,16 @@
-var staticCacheName = "pwa-v1.01";
+var staticCacheName = "pwa-v1.04";
  
 self.addEventListener("install", function (e) {
 
-  self.skipWaiting();
+  //self.skipWaiting();
 
   e.waitUntil(
     caches.open(staticCacheName).then(function (cache) {
-      return cache.addAll(["/", "/index.html"]);
+      return cache.addAll([]);
     })
   );
 });
- 
+ /*
 self.addEventListener("fetch", function (event) {
   //console.log(event.request.url);
  
@@ -19,4 +19,4 @@ self.addEventListener("fetch", function (event) {
       return response || fetch(event.request);
     })
   );
-});
+});*/

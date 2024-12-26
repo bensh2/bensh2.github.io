@@ -26,7 +26,7 @@ class AppLayout {
         <br><button id='goback'>חזרה</button>
         `;
         this.#setPage(page);
-        $("#goback").on("click", () => { window.location.reload(); })
+        $("#goback").on("click", () => { window.location.href = "/"; })
     }
 
     #choice(item)
