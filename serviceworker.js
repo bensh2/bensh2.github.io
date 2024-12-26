@@ -1,15 +1,18 @@
 var staticCacheName = "pwa-v1.01";
  
 self.addEventListener("install", function (e) {
+
+  self.skipWaiting();
+
   e.waitUntil(
     caches.open(staticCacheName).then(function (cache) {
-      return cache.addAll(["/"]);
+      return cache.addAll(["/", "/index.html"]);
     })
   );
 });
  
 self.addEventListener("fetch", function (event) {
-  console.log(event.request.url);
+  //console.log(event.request.url);
  
   event.respondWith(
     caches.match(event.request).then(function (response) {
