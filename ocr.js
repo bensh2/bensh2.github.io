@@ -32,6 +32,9 @@ async function processfile(file)
     if (document.getElementById("heb").checked)
         langs.push("heb");
     const worker = await Tesseract.createWorker(langs);
+    /*await worker.setParameters({
+        preserve_interword_spaces: '1',
+      });*/
 
     const result = await worker.recognize(file);
     document.getElementById("wait").style.display = "none";
