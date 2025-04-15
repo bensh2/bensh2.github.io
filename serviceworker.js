@@ -1,4 +1,4 @@
-var staticCacheName = "pwa-v1.04";
+var staticCacheName = "pwa-v1.05";
  
 self.addEventListener("install", function (e) {
 

@@ -3,7 +3,9 @@ installPrompt = null;
 
 //window.addEventListener('DOMContentLoaded', function() {
   // handle the install event, if browser supports it
-  const installButton = document.querySelector("#installapp");
+function setupAppInstall()
+{
+  installButton = document.querySelector("#installapp");
   if (installButton)
   {
     window.addEventListener("beforeinstallprompt", (event) => {  // event fires if website can be installed as pwa
@@ -24,8 +26,7 @@ installPrompt = null;
       });  
     });
   }
-
-//});
+}
 
 function disableInAppInstallPrompt() {
     installPrompt = null;

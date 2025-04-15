@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR test</title>
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <script src="ocr.js"></script>
+</head>
+<body>
+    <h2>OCR test</h2>
+    <br>
+    <input type="file" id="fileElem" style="display:none" />
+    <button id="fileSelect" type="button">Select file</button>
+    <br><br>
+    <input type="checkbox" id="eng" checked>English <input type="checkbox" id="heb">Hebrew 
+    <br><br>
+    <div id="wait" style="display: none">Please wait...</div>
+    <div id="result" contenteditable="true" style="width: 100%; height:fit-content; border: 1px solid black; display: none;">
+    </div>
+</body>
+</html>

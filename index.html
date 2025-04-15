@@ -22,7 +22,7 @@
   
   <div id="main">
     <h4>גרסה 26.12.2024</h4><br>
-      <button id="startquiz">התחל תרגול</button>
+      <button id="startquiz"> עריכת רשימות</button>
 
       <br><br><div style="text-align: center;">
         <button id="installapp" hidden>התקנת אפליקציה</button>
@@ -35,8 +35,29 @@
       $("#startquiz").on("click", () => {
           /*let quiz = new QuizRunner();
           quiz.run();*/
-          window.location.href = "practice.html";
+          window.location.href = "vocadmin.html";
       });
+
+      test();
+
+    async function test()
+    {
+      let lm = new ListManager();
+      let list = new Wordlist();
+      list.setName("רשימת מילים2");
+      console.log(list.getData());
+      try {
+        //await lm.saveList(list);
+        let files = await lm.getLists();
+        console.log(files);
+        list = await lm.loadList("1735408546149");
+        console.log(list);
+      }
+      catch(err)
+      {
+        console.error(err);
+      }
+    }
   });
   
 </script>
