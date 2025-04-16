@@ -1,29 +1,6 @@
-document.addEventListener('DOMContentLoaded', ready);
+// basic ocr
 
-function ready()
-{
-    const fileSelect = document.getElementById("fileSelect");
-    const fileElem = document.getElementById("fileElem");
-
-    fileSelect.addEventListener("click",  (e) => {
-        if (fileElem) {
-            fileElem.click();
-        }
-    }, false);
-
-    fileElem.addEventListener("change", readfile, false);
-}
-
-function readfile()
-{
-    const file = document.getElementById("fileElem").files[0];
-    if (!file) { return false };
-    console.log(file);
-    processfile(file);
-    document.getElementById("fileElem").value = null;
-}
-
-async function processfile(file)
+async function processocr(file)
 {
     document.getElementById("wait").style.display = "block";
     let langs = [];
@@ -32,9 +9,9 @@ async function processfile(file)
     if (document.getElementById("heb").checked)
         langs.push("heb");
     const worker = await Tesseract.createWorker(langs);
-    /*await worker.setParameters({
-        preserve_interword_spaces: '1',
-      });*/
+    await worker.setParameters({
+        //tessedit_char_whitelist: 'abcdefghijklmnopqrstuvwxtzABCDEFGHIJKLMNOPQRSTUVWXYZ -,אבגדהוזחטיכלמנסעפצקרשתןםץךף',
+      });
 
     const result = await worker.recognize(file);
     document.getElementById("wait").style.display = "none";
