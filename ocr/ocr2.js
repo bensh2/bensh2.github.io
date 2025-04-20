@@ -68,8 +68,8 @@ async function processocr(file)
     let heb = false;
     if (document.getElementById("heb").checked)
         heb = true;
-    if (document.getElementById("eng").checked && !heb)
-        langs = ["eng"];
+    /*if (document.getElementById("eng").checked && !heb)
+        langs = ["eng"];*/
 
     let parameter_list = [];//getparameters();
     let parameters = {};
