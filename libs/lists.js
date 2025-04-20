@@ -3,7 +3,8 @@ class Wordlist {
 
     constructor()
     {
-        this.#data = { filename: String(Date.now()), name: "", lastupdate: Date.now(), size: 0, synced: false, items: []};
+        let uid = String(Date.now());
+        this.#data = { uid: uid, filename: uid, name: "", lastupdate: Date.now(), size: 0, synced: false, items: []};
     }
 
     /* {

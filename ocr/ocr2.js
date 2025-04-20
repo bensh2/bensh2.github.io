@@ -44,6 +44,23 @@ function isEnglishAlphabetical(text) {
     return pattern.test(text);
   }
 
+function getparameters()
+{
+    let data = document.getElementById("parameters").value;
+    let lines = String(data).split("\n");
+    let parameters = [];
+    for (const line of lines)
+    {
+        let split = line.split("=");
+        if (split.length == 2)
+        {
+            parameters.push([split[0],split[1]]);
+        }
+    }
+    //console.log(parameters);
+    return parameters;
+}
+
 async function processocr(file)
 {
     document.getElementById("wait").style.display = "block";
@@ -51,10 +68,19 @@ async function processocr(file)
     let heb = false;
     if (document.getElementById("heb").checked)
         heb = true;
-    const worker = await Tesseract.createWorker(langs);
+    if (document.getElementById("eng").checked && !heb)
+        langs = ["eng"];
+
+    let parameter_list = [];//getparameters();
+    let parameters = {};
+    for (const item of parameter_list)
+        parameters[item[0]] = item[1];
+    console.log(parameters);
+    const worker = await Tesseract.createWorker(langs);//,3,{},parameters);
     await worker.setParameters({
         //tessedit_char_whitelist: 'abcdefghijklmnopqrstuvwxtzABCDEFGHIJKLMNOPQRSTUVWXYZ -,אבגדהוזחטיכלמנסעפצקרשתןםץךף',
       });
+    await worker.setParameters(parameters);
 
     const result = await worker.recognize(file);
     document.getElementById("wait").style.display = "none";
