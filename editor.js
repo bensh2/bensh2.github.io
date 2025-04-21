@@ -146,7 +146,7 @@ function runEditor()
         {
             let tr = target.parent().parent();
             let uniqueid = $(tr).attr("data-uniqueid");
-            alert(`getRowByUniqueId: ${JSON.stringify($table.bootstrapTable('getRowByUniqueId', uniqueid))}`)
+            //alert(`getRowByUniqueId: ${JSON.stringify($table.bootstrapTable('getRowByUniqueId', uniqueid))}`)
         }
         if (target.hasClass("delete"))
         {
