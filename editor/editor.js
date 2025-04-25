@@ -36,7 +36,7 @@ export class Editor {
 
         this.#columns.push(
             {
-                title: config.columnNames[columnId++],
+                title: config.columnNames['headword'] ?? "",
                 field: 'headword',
                 halign: 'left',
                 align: 'left',
@@ -47,7 +47,7 @@ export class Editor {
             });
         this.#columns.push(
             {
-                title: config.columnNames[columnId++],
+                title: config.columnNames['definition'] ?? "",
                 field: 'def',
                 width: "28",  // setting this width causes shifts when switching pages
                 widthUnit: "%",
@@ -59,7 +59,7 @@ export class Editor {
         {
             this.#columns.push(
             {
-                title: config.columnNames[columnId++],
+                title: config.columnNames["edit"] ?? "",
                 field: "edit",
                 width: "5",
                 widthUnit: "%",
@@ -85,7 +85,7 @@ export class Editor {
         if (config.delete)
             this.#columns.push(
             {
-                title: config.columnNames[columnId++],
+                title: config.columnNames['delete'] ?? "",
                 field: "delete",
                 width: "5",
                 widthUnit: "%",
@@ -99,7 +99,7 @@ export class Editor {
         if (config.confirm)
             this.#columns.push(
             {
-                title: config.columnNames[columnId++],
+                title: config.columnNames['confirm'] ?? "",
                 field: "",
                 width: "5",
                 widthUnit: "%",
@@ -114,7 +114,7 @@ export class Editor {
         if (config.select)
             this.#columns.push(
             {
-                title: config.columnNames[columnId++],
+                title: config.columnNames['select'] ?? "",
                 field: "selected",
                 width: "5",
                 widthUnit: "%",
@@ -172,7 +172,7 @@ export class Editor {
     #createTable(config)
     {
         let headerStyle = function() { return { css: { 'display': 'none' } } };
-        if (config.columnNames.length > 0)
+        if (Object.keys(config.columnNames).length > 0)
             headerStyle = null;
 
         let parameters = {

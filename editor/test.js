@@ -6,7 +6,7 @@ function createTable()
 {
     let editor = new Editor({
         element: "#datatable",
-        columnNames: ["", "אנגלית", "עברית", "ערוך", "מחק", "אישור", "הכל"],
+        columnNames: { headword: "אנגלית", definition: "עברית", edit: "ערוך", delete: "מחק", confirm: "אישור"},
         edit: true,
         delete: true,
         select: true,
@@ -35,9 +35,8 @@ function createTable()
 
     editor.setData(data);
     
-    $("#getdata").on("click", () => {
-        let data = editor.getData();
-        console.log(data);
-    }
-    )
+    document.querySelector("#getdata").addEventListener("click", () => {
+        console.log(editor.getData());
+    });
+
 }
