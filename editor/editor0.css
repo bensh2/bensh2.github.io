@@ -1,0 +1,39 @@
+table td.bs-checkbox label { height: 0}
+table th.bs-checkbox label { height: 0}
+table thead { background-color: #F8F9FB;}
+table td:nth-child(2), table td:nth-child(3)  { text-align: center;}
+.fixed-table-container { /*height: 470px*/ }
+.float-right.pagination, .float-left.pagination {
+    
+    float: none !important;
+}
+ul.pagination {
+    width: 99%;
+    justify-content: center;
+    display: flex;
+}
+
+.tablecell {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100px;
+}
+
+.bootstrap-table i.bi-trash, .bootstrap-table i.bi-pencil {
+    cursor: pointer;
+}
+
+#buttontoolbar {
+    margin-bottom: 10px;
+}
+
+div.search.btn-group {
+    float: left;
+}
+
+@media (width <= 450px) {
+    .hide-xs {
+        display: none;
+    }
+  }

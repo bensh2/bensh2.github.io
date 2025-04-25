@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR test</title>
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <script src="ocrtest4.js" type="module"></script>
+</head>
+<body>
+    <h2>OCR test 4 English + optional Hebrew</h2>
+    <br>
+    <input type="file" id="fileElem" style="display:none" />
+    <button id="fileSelect" type="button">Select file</button>
+    <br><br>
+    <!--<input type="checkbox" id="eng">English only OCR<br>-->
+    <input type="checkbox" id="heb">Extract Hebrew 
+    
+    <!--<br><br>
+    Parameters for the engine (<a target="_blank" href='https://github.com/bradparks/tesseract.js___javascript_based_ocr/blob/master/docs/tesseract_parameters.md'>List</a>)
+    <br><br><textarea style='width: 30em; height: 10em;' id="parameters"></textarea>-->
+    <div id="wait" style="display: none">Please wait...</div>
+    <div id="result" style="display: none;">
+    </div>
+</body>
+</html>

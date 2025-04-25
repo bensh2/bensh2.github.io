@@ -1,0 +1,220 @@
+export class Editor {
+    #table;
+    #tableid;
+    #columns;
+    #buttons;
+
+    constructor(config)
+    {
+        this.#tableid = config.tableid ?? "editor";
+        config.columnNames = config.columnNames ?? [];
+        this.#initialize(config);
+        this.#createHtml(config)
+        this.#createTable(config);
+    }
+
+    #initialize(config)
+    {
+        let columnId = 0;
+        this.#buttons = {};
+        this.#columns = [{ field: "id", visible: false }];
+
+        if (config.rowNumber)
+            this.#columns.push({
+                title: config.columnNames[columnId++],
+                field: "rownumber",
+                width: "5",
+                widthUnit: "%",
+                /*halign: "center",
+                class: "aligncenter",*/
+                formatter: function(value, row, index, field)
+                {
+                    let rownumber = index + 1;
+                    return `${rownumber}.`;
+                }
+            });
+
+        this.#columns.push(
+            {
+                title: config.columnNames[columnId++],
+                field: 'headword',
+                halign: 'left',
+                align: 'left',
+                width: "28",
+                widthUnit: "%",
+                class: "tablecell",
+                sortable: config.sort ?? false
+            });
+        this.#columns.push(
+            {
+                title: config.columnNames[columnId++],
+                field: 'def',
+                width: "28",  // setting this width causes shifts when switching pages
+                widthUnit: "%",
+                class: "tablecell",
+                sortable: config.sort ?? false
+            });
+
+        if (config.edit)
+        {
+            this.#columns.push(
+            {
+                title: config.columnNames[columnId++],
+                field: "edit",
+                width: "5",
+                widthUnit: "%",
+                halign: "center",
+                class: "aligncenter",
+                formatter: function(value, row, index, field)
+                {
+                    return `<i class="bi bi-pencil edit"></i>`;
+                }
+            });
+
+            this.#buttons['btnAdd'] = {
+                  text: '',
+                  icon: 'bi-plus-lg',
+                  event () {
+                    alert('Add row')
+                  },
+                  attributes: {
+                    title: ''
+                  }
+            };
+        }
+        if (config.delete)
+            this.#columns.push(
+            {
+                title: config.columnNames[columnId++],
+                field: "delete",
+                width: "5",
+                widthUnit: "%",
+                halign: "center",
+                class: "aligncenter",
+                formatter: function(value, row, index, field)
+                {
+                    return `<i class="bi bi-trash delete"></i>`;
+                }
+            });
+        if (config.confirm)
+            this.#columns.push(
+            {
+                title: config.columnNames[columnId++],
+                field: "",
+                width: "5",
+                widthUnit: "%",
+                halign: "center",
+                class: "aligncenter",
+                formatter: function(value, row, index, field)
+                {
+                    return `<i class="bi bi-check-lg confirm"></i>`;
+                }
+            });
+                
+        if (config.select)
+            this.#columns.push(
+            {
+                title: config.columnNames[columnId++],
+                field: "selected",
+                width: "5",
+                widthUnit: "%",
+                checkbox: true
+            });
+
+        if (config.displayMode)
+            this.#buttons['btnDisplay'] = {
+            text: '',
+            icon: 'bi-grid',
+            event () {
+                alert('Display mode')
+            },
+            attributes: {
+                title: ''
+            }
+        };
+        
+    }
+
+    #createHtml(config)
+    {
+        if (config.direction)
+            $(config.element).css("direction", config.direction);
+
+        $(config.element).html(`<div id="buttontoolbar"></div><table class="table" id="${this.#tableid}"></table>`);
+        this.#table = $(`#${this.#tableid}`);
+    }
+
+    setData(rawdata)
+    {
+        let data = [];
+        for (const item of rawdata)
+        {
+            let entry = { id: (data.length + 1), headword: item[0], def: item[1], moredef: "" };
+            if (item[2])
+                entry.more = item[2];
+            data.push(entry);
+        }
+
+        this.#table.bootstrapTable('load', data);
+    }
+
+    getData()
+    {
+        let rows = this.#table.bootstrapTable('getData');
+        let data = [];
+        for (const row of rows)
+        {
+            data.push([row.headword, row.def]);
+        }
+        return data;
+    }
+
+    #createTable(config)
+    {
+        let headerStyle = function() { return { css: { 'display': 'none' } } };
+        if (config.columnNames.length > 0)
+            headerStyle = null;
+
+        let parameters = {
+            classes: "table",
+            maintainMetaData: true,
+            uniqueId: "id",
+            pagination: config.pagination ?? false,
+            pageSize: config.paginationSize ?? 10,
+            pageNumber: 1,
+            paginationParts: ['pageList'],
+            headerStyle: headerStyle,
+            buttons: () => ( this.#buttons ),
+            formatSearch: function() { return "" },
+            formatNoMatches: function () {
+                return ''; // "List is empty"
+            },
+            formatLoadingMessage: function () {
+                return ''; // "Loading data"
+            },
+            showButtonText: true,
+            
+            search: config.search ?? false,
+            searchAlign: "left",
+            buttonsToolbar: "#buttontoolbar",
+            columns: this.#columns,
+            
+        };
+
+        this.#table.bootstrapTable(parameters);
+
+        //$("div.search.btn-group").css("float", (config.direction == "rtl") ? "left" : "right");
+
+        this.#table.on('click-cell.bs.table', (event, field, value, row, $element) => {
+            if (field == "selected")
+            {
+                let row_index = $element.parent().attr("data-index");
+                //console.log(row_index);
+                if (value == true)
+                    this.#table.bootstrapTable('uncheck', row_index);
+                else
+                    this.#table.bootstrapTable('check', row_index);
+            }
+        });
+    }
+}
