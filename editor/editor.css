@@ -33,7 +33,7 @@ ul.pagination {
 #buttontoolbar button {
 }
 
-th.bs-checkbox div.th-inner {
+th.bs-checkbox.nopadding div.th-inner {
     padding: 0 !important;
 }
 

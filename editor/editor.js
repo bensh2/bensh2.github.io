@@ -26,7 +26,8 @@ export class Editor {
                 field: "selected",
                 width: "3",
                 widthUnit: "%",
-                checkbox: true
+                checkbox: true,
+                class: Object.keys(config.columnNames).length > 0 ? "" : "nopadding"  // remove padding for checkbox when column names are empty
             });
 
         if (config.rowNumber)
