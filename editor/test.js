@@ -1,9 +1,9 @@
 import { Editor } from "./editor.js";
 
 document.querySelector("#columns").value = JSON.stringify({ headword: "אנגלית", definition: "עברית", edit: "ערוך", delete: "מחק", confirm: "אישור" });
-let checkboxes = document.querySelectorAll("input[type='checkbox']");
+/*let checkboxes = document.querySelectorAll("input[type='checkbox']");
 for (const checkbox of checkboxes)
-    checkbox.checked = true;
+    checkbox.checked = true;*/
 
 document.querySelector("#create").addEventListener("click", () => { createTable() });
 
