@@ -19,6 +19,16 @@ export class Editor {
         this.#buttons = {};
         this.#columns = [{ field: "id", visible: false }];
 
+        if (config.select)
+            this.#columns.push(
+            {
+                title: config.columnNames['select'] ?? "",
+                field: "selected",
+                width: "3",
+                widthUnit: "%",
+                checkbox: true
+            });
+
         if (config.rowNumber)
             this.#columns.push({
                 title: config.columnNames[columnId++],
@@ -61,7 +71,7 @@ export class Editor {
             {
                 title: config.columnNames["edit"] ?? "",
                 field: "edit",
-                width: "5",
+                width: "4",
                 widthUnit: "%",
                 halign: "center",
                 class: "aligncenter",
@@ -87,7 +97,7 @@ export class Editor {
             {
                 title: config.columnNames['delete'] ?? "",
                 field: "delete",
-                width: "5",
+                width: "4",
                 widthUnit: "%",
                 halign: "center",
                 class: "aligncenter",
@@ -101,7 +111,7 @@ export class Editor {
             {
                 title: config.columnNames['confirm'] ?? "",
                 field: "",
-                width: "5",
+                width: "4",
                 widthUnit: "%",
                 halign: "center",
                 class: "aligncenter",
@@ -109,16 +119,6 @@ export class Editor {
                 {
                     return `<i class="bi bi-check-lg confirm"></i>`;
                 }
-            });
-                
-        if (config.select)
-            this.#columns.push(
-            {
-                title: config.columnNames['select'] ?? "",
-                field: "selected",
-                width: "5",
-                widthUnit: "%",
-                checkbox: true
             });
 
         if (config.displayMode)
@@ -167,6 +167,11 @@ export class Editor {
             data.push([row.headword, row.def]);
         }
         return data;
+    }
+    
+    toggle()
+    {
+        this.#table.bootstrapTable('toggleView')
     }
 
     #createTable(config)

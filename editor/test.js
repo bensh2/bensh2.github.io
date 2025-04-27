@@ -1,22 +1,34 @@
 import { Editor } from "./editor.js";
 
-createTable();
+document.querySelector("#columns").value = JSON.stringify({ headword: "אנגלית", definition: "עברית", edit: "ערוך", delete: "מחק", confirm: "אישור" });
+let checkboxes = document.querySelectorAll("input[type='checkbox']");
+for (const checkbox of checkboxes)
+    checkbox.checked = true;
+
+document.querySelector("#create").addEventListener("click", () => { createTable() });
+
+function getvalue(selector)
+{
+    let element = document.querySelector(selector);
+    if (element.id == "columns")
+        return JSON.parse(element.value);
+    return element.checked;
+}
 
 function createTable()
 {
     let editor = new Editor({
         element: "#datatable",
-        columnNames: { headword: "אנגלית", definition: "עברית", edit: "ערוך", delete: "מחק", confirm: "אישור"},
-        edit: true,
-        delete: true,
-        select: true,
-        confirm: true,
-        sort: true,
-        displayMode: true,
-        rowNumber: true,
-        pagination: true,
-        //paginationSize: 10,
-        search: true,
+        columnNames: getvalue("#columnnames") ? getvalue("#columns") : null,
+        edit: getvalue("#edit"),
+        delete: getvalue("#delete"),
+        select: getvalue("#select"),
+        confirm: getvalue("#confirm"),
+        sort: getvalue("#sort"),
+        displayMode: getvalue("#displaymode"),
+        rowNumber: getvalue("#rownumber"),
+        pagination: getvalue("#pagination"),
+        search: getvalue("#search"),
     });
 
     let data = [ ["Wear","ללבוש"],["Forest","יער"],["Strange","מוזר"],["Keep","לשמור"],["Saw","ראה"],["Diary","יומן"],["Village","כפר"],
@@ -35,8 +47,8 @@ function createTable()
 
     editor.setData(data);
     
-    document.querySelector("#getdata").addEventListener("click", () => {
+    /*document.querySelector("#getdata").addEventListener("click", () => {
         console.log(editor.getData());
-    });
+    });*/
 
 }

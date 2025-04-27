@@ -15,17 +15,31 @@
 </head>
 
 <body>
+<div id="config" class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+  <input id="columnnames" type="checkbox"> columnNames <br><input id="columns" type="text" style="width: 95%;"><br>
+  <input id="edit" type="checkbox"> edit
+  <input id="delete" type="checkbox"> delete
+  <input id="select" type="checkbox"> select
+  <input id="confirm" type="checkbox"> confirm
+  <input id="sort" type="checkbox"> sort
+  <input id="displaymode" type="checkbox"> displayMode
+  <input id="rownumber" type="checkbox"> rowNumber
+  <input id="pagination" type="checkbox"> pagination
+  <input id="search" type="checkbox"> search
+  <br><br>
+  <button id="create" type="button">Create table</button>
+  </div>
+  </div>
+</div><br>
 <div class="container-fluid">
   <div class="row">
-    <div id="datatable" class="col-sm-12"> <!-- col-md-10 col-lg-8 col-xl-7 col-xxl-6"> -->
+    <div id="datatable" class="col-12"> <!-- col-md-10 col-lg-8 col-xl-7 col-xxl-6"> -->
 
     </div>
   </div>
-  <div class="row">
-    <div id="datatable" class="col-2">
-      <button type="button" id="getdata" class="btn btn-primary">Get data</button>
-    </div>
-  </div>
+
 </div>
 </body>
 </html>
