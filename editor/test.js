@@ -19,6 +19,7 @@ function createTable()
 {
     let editor = new Editor({
         element: "#datatable",
+        header: getvalue("#header"),
         columnNames: getvalue("#columnnames") ? getvalue("#columns") : null,
         edit: getvalue("#edit"),
         delete: getvalue("#delete"),

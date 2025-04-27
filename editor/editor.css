@@ -33,6 +33,10 @@ ul.pagination {
 #buttontoolbar button {
 }
 
+th.bs-checkbox div.th-inner {
+    padding: 0 !important;
+}
+
 div.search.btn-group {
     float: left;
 }

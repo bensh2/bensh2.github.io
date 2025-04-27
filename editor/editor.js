@@ -177,7 +177,8 @@ export class Editor {
     #createTable(config)
     {
         let headerStyle = function() { return { css: { 'display': 'none' } } };
-        if (Object.keys(config.columnNames).length > 0)
+        //if (Object.keys(config.columnNames).length > 0)
+        if (config.header)
             headerStyle = null;
 
         let parameters = {
