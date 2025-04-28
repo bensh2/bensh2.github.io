@@ -82,7 +82,7 @@ export class Editor {
                 }
             });
 
-            this.#buttons['btnAdd'] = {
+            /*this.#buttons['btnAdd'] = {
                   text: '',
                   icon: 'bi-plus-lg',
                   event () {
@@ -91,7 +91,7 @@ export class Editor {
                   attributes: {
                     title: ''
                   }
-            };
+            };*/
         }
         if (config.delete)
             this.#columns.push(
@@ -118,7 +118,7 @@ export class Editor {
                 class: "aligncenter",
                 formatter: function(value, row, index, field)
                 {
-                    return `<i class="bi bi-check-lg confirm"></i>`;
+                    return `<i class="bi bi-check2-square confirm"></i>`;
                 }
             });
 
