@@ -16,6 +16,7 @@ function googleLogin() {
                   'response_type': 'token',
                   'scope': 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
                   'include_granted_scopes': 'true',
+                  'response_type': 'code',  
                   'state': '5w798toojo3478ti'};
   
     // Add form parameters as hidden input values.
