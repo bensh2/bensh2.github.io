@@ -54,7 +54,10 @@ export class Editor {
                 width: "28",
                 widthUnit: "%",
                 class: "tablecell",
-                sortable: config.sort ?? false
+                sortable: config.sort ?? false,
+                formatter: (value, row) => {
+                    return "<div contenteditable='plaintext-only'>" + value + "</div>";
+                }
             });
         this.#columns.push(
             {
@@ -63,7 +66,10 @@ export class Editor {
                 width: "28",  // setting this width causes shifts when switching pages
                 widthUnit: "%",
                 class: "tablecell",
-                sortable: config.sort ?? false
+                sortable: config.sort ?? false,
+                formatter: (value, row) => {
+                    return "<div contenteditable='plaintext-only'>" + value + "</div>";
+                }
             });
 
         if (config.edit)
