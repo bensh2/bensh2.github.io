@@ -1,4 +1,4 @@
-reqUserData();
+addEventListener("DOMContentLoaded", (event) => { reqUserData() });
 
 async function reqUserData()
 {
@@ -25,7 +25,7 @@ async function reqUserData()
     
         const json = await response.json();
         console.log(json);
-        document.getElementById("userinfo").innerHTML(JSON.stringify(json, null, 2));
+        document.querySelector("#userinfo").innerHTML(JSON.stringify(json, null, 2));
       } catch (error) {
         console.error(error.message);
     }
