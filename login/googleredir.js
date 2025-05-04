@@ -6,14 +6,14 @@ async function reqUserData()
     let uri = window.location.search;
     if (uri == "")
         uri = window.location.hash;
-    
+
     const params = new URLSearchParams(uri);
     const scopes = params.get("scope");
     // add code verify the scopes
 
     // request email
 
-    const baseurl = "https://www.googleapis.com/auth/userinfo.email";
+    const baseurl = "https://www.googleapis.com/oauth2/v2/userinfo";//"https://www.googleapis.com/auth/userinfo.email";
     const access_token = params.get("access_token");
     
 
