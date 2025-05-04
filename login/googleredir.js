@@ -18,7 +18,7 @@ async function reqUserData()
     
 
     let url = baseurl + "?access_token="+access_token;
-    /*try {
+    try {
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
@@ -28,8 +28,8 @@ async function reqUserData()
         console.log(json);
       } catch (error) {
         console.error(error.message);
-    }*/
-        let form = document.createElement('form');
+    }
+        /*let form = document.createElement('form');
         form.setAttribute('method', 'GET'); // Send as a GET request.
         form.setAttribute('action', baseurl);
       
@@ -47,5 +47,5 @@ async function reqUserData()
       
         // Add form to page and submit it to open the OAuth 2.0 endpoint.
         document.body.appendChild(form);
-        form.submit();
+        form.submit();*/
 }
