@@ -2,7 +2,10 @@ reqUserData();
 
 async function reqUserData()
 {
-    const params = new URLSearchParams(window.location.search);
+    let uri = window.location.search;
+    if (uri.includes("#"))
+        uri = uri.substring(uri.indexOf("#") + 1);
+    const params = new URLSearchParams(uri);
     const scopes = params.get("scope");
     // add code verify the scopes
 
