@@ -2,6 +2,7 @@ reqUserData();
 
 async function reqUserData()
 {
+    debugger;
     let uri = window.location.search;
     if (uri.includes("#"))
         uri = uri.substring(uri.indexOf("#") + 1);
@@ -13,7 +14,7 @@ async function reqUserData()
 
     const baseurl = "https://www.googleapis.com/auth/userinfo.email";
     const access_token = params.get("access_token");
-    debugger;
+    
 
     let url = baseurl + "?access_token="+access_token;
     /*try {
