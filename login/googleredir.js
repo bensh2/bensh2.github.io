@@ -25,7 +25,7 @@ async function reqUserData()
     
         const json = await response.json();
         console.log(json);
-        document.querySelector("#userinfo").innerHTML(JSON.stringify(json, null, 2));
+        document.querySelector("#userinfo").innerHTML = JSON.stringify(json, null, 2);
       } catch (error) {
         console.error(error.message);
     }
