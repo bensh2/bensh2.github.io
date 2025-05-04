@@ -2,7 +2,6 @@ reqUserData();
 
 async function reqUserData()
 {
-    debugger;
     let uri = window.location.search;
     if (uri == "")
         uri = window.location.hash;
@@ -26,6 +25,7 @@ async function reqUserData()
     
         const json = await response.json();
         console.log(json);
+        document.getElementById("userinfo").innerHTML(JSON.stringify(json, null, 2));
       } catch (error) {
         console.error(error.message);
     }
