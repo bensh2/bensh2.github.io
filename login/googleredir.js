@@ -10,7 +10,7 @@ async function reqUserData()
 
     const baseurl = "https://www.googleapis.com/auth/userinfo.email";
     const access_token = params.get("access_token");
-    let url = baseurl + "?access_token="+decodeURI(access_token);
+    let url = baseurl + "?access_token="+access_token;
     try {
         const response = await fetch(url);
         if (!response.ok) {
