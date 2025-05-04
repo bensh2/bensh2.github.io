@@ -12,7 +12,7 @@ function googleLogin() {
   
     // Parameters to pass to OAuth 2.0 endpoint.
     var params = {'client_id': '780365470464-8e6o75op1kq9dv339ahkr5ud4fvkcsnv.apps.googleusercontent.com',
-                  'redirect_uri': 'https://bensh2.github.io/login/gsuccess.html',
+                  'redirect_uri': 'https://bensh2.github.io/login/googleredir.html',
                   'response_type': 'token',
                   'scope': 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
                   'include_granted_scopes': 'true',
