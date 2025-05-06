@@ -3,6 +3,7 @@ export class Editor {
     #tableid;
     #columns;
     #buttons;
+    #data;
 
     constructor(config)
     {
@@ -53,11 +54,11 @@ export class Editor {
                 align: 'left',
                 width: "28",
                 widthUnit: "%",
-                class: "tablecell",
+                class: "tablecell headword",
                 sortable: config.sort ?? false,
-                formatter: (value, row) => {
+                formatter: config.inline ? (value, row) => {
                     return "<div contenteditable='plaintext-only'>" + value + "</div>";
-                }
+                } : null
             });
         this.#columns.push(
             {
@@ -65,11 +66,11 @@ export class Editor {
                 field: 'def',
                 width: "28",  // setting this width causes shifts when switching pages
                 widthUnit: "%",
-                class: "tablecell",
+                class: "tablecell def",
                 sortable: config.sort ?? false,
-                formatter: (value, row) => {
+                formatter: config.inline ? (value, row) => {
                     return "<div contenteditable='plaintext-only'>" + value + "</div>";
-                }
+                } : null
             });
 
         if (config.edit)
@@ -128,12 +129,13 @@ export class Editor {
                 }
             });
 
+        let that = this;
         if (config.displayMode)
             this.#buttons['btnDisplay'] = {
             text: '',
             icon: 'bi-grid',
             event () {
-                alert('Display mode')
+                that.toggle();
             },
             attributes: {
                 title: ''
@@ -162,7 +164,8 @@ export class Editor {
             data.push(entry);
         }
 
-        this.#table.bootstrapTable('load', data);
+        this.#data = data;
+        this.#table.bootstrapTable('load', this.#data);  // bootstrap-table uses this internally
     }
 
     getData()
@@ -174,6 +177,18 @@ export class Editor {
             data.push([row.headword, row.def]);
         }
         return data;
+    }
+
+    updateCell(id, column, value)
+    {
+        for (let row of this.#data)  // this will update bootstrap table internally
+        {
+            if (row.id == id)
+            {
+                row[column] = value;
+                break;
+            }
+        }
     }
     
     toggle()
@@ -229,5 +244,33 @@ export class Editor {
                     this.#table.bootstrapTable('check', row_index);
             }
         });
+
+        let that = this;
+        if (config.inline)
+        {
+            this.#table.on('post-body.bs.table', function (number, size) {
+        
+                //console.log("post-body");
+
+                $(`#${that.#tableid} div[contenteditable]`).on("input", (e) => {
+                    //console.log(e);
+                    let content = $(e.target).text();
+                    let td = $(e.target).parent();
+                    let column = null;
+                    if (td.hasClass("headword"))
+                        column = "headword";
+                    else if (td.hasClass('def'))
+                        column = "def";
+                    else
+                        console.error("Not found class headword/def in inline parent");
+
+                    let tr = td.parent();
+                    let uniqueid = tr.attr("data-uniqueid");
+                    that.updateCell(uniqueid, column, content); // update internal data
+                    //console.log(`Update row ${uniqueid} column ${column} to "${content}"`);
+                });
+            });
+
+        }
     }
 }

@@ -21,6 +21,7 @@ function createTable()
         element: "#datatable",
         header: getvalue("#header"),
         columnNames: getvalue("#columnnames") ? getvalue("#columns") : null,
+        inline: getvalue("#inline"),
         edit: getvalue("#edit"),
         delete: getvalue("#delete"),
         select: getvalue("#select"),
@@ -47,9 +48,11 @@ function createTable()
     ["Kill","להרוג"] ];
 
     editor.setData(data);
+
+    document.querySelector("#getdata").replaceWith(document.querySelector("#getdata").cloneNode(true));  // remove all event listeners
     
-    /*document.querySelector("#getdata").addEventListener("click", () => {
+    document.querySelector("#getdata").addEventListener("click", () => {
         console.log(editor.getData());
-    });*/
+    });
 
 }
