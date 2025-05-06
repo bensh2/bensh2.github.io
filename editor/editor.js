@@ -170,7 +170,7 @@ export class Editor {
 
     getData()
     {
-        let rows = this.#table.bootstrapTable('getData');
+        let rows = this.#data; // this returns all data even when user filters it //this.#table.bootstrapTable('getData');
         let data = [];
         for (const row of rows)
         {
