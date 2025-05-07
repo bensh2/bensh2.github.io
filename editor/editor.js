@@ -19,6 +19,7 @@ export class Editor {
         let columnId = 0;
         this.#buttons = {};
         this.#columns = [{ field: "id", visible: false }];
+        let that = this;
 
         if (config.select)
             this.#columns.push(
@@ -73,11 +74,12 @@ export class Editor {
                 } : null
             });
 
-        if (config.edit)
+        if (config.edit || config.editColumn)
         {
             this.#columns.push(
             {
                 title: config.columnNames["edit"] ?? "",
+                visible: config.edit,
                 field: "edit",
                 width: "4",
                 widthUnit: "%",
@@ -88,18 +90,8 @@ export class Editor {
                     return `<i class="bi bi-pencil edit"></i>`;
                 }
             });
-
-            /*this.#buttons['btnAdd'] = {
-                  text: '',
-                  icon: 'bi-plus-lg',
-                  event () {
-                    alert('Add row')
-                  },
-                  attributes: {
-                    title: ''
-                  }
-            };*/
         }
+
         if (config.delete)
             this.#columns.push(
             {
@@ -129,7 +121,6 @@ export class Editor {
                 }
             });
 
-        let that = this;
         if (config.displayMode)
             this.#buttons['btnDisplay'] = {
             text: '',
@@ -141,6 +132,25 @@ export class Editor {
                 title: ''
             }
         };
+
+        if (config.editColumn)
+            this.#buttons['btnEdit'] = {
+                text: '',
+                icon: 'bi-pencil',
+                event () {
+                    let columns = that.#table.bootstrapTable('getVisibleColumns').map(function (it) {
+                        return it.field
+                      });
+                    if (columns.includes("edit"))
+                        that.#table.bootstrapTable('hideColumn', 'edit');
+                    else
+                        that.#table.bootstrapTable('showColumn', 'edit');
+                },
+                attributes: {
+                  title: '',
+                  class: 'editColumn'
+                }
+            };
         
     }
 
