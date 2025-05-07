@@ -92,10 +92,11 @@ export class Editor {
             });
         }
 
-        if (config.delete)
+        if (config.delete || config.deleteColumn)
             this.#columns.push(
             {
                 title: config.columnNames['delete'] ?? "",
+                visible: config.delete,
                 field: "delete",
                 width: "4",
                 widthUnit: "%",
@@ -106,6 +107,7 @@ export class Editor {
                     return `<i class="bi bi-trash delete"></i>`;
                 }
             });
+
         if (config.confirm)
             this.#columns.push(
             {
@@ -149,6 +151,25 @@ export class Editor {
                 attributes: {
                   title: '',
                   class: 'editColumn'
+                }
+            };
+
+        if (config.editColumn)
+            this.#buttons['btnDelete'] = {
+                text: '',
+                icon: 'bi-trash',
+                event () {
+                    let columns = that.#table.bootstrapTable('getVisibleColumns').map(function (it) {
+                        return it.field
+                        });
+                    if (columns.includes("delete"))
+                        that.#table.bootstrapTable('hideColumn', 'delete');
+                    else
+                        that.#table.bootstrapTable('showColumn', 'delete');
+                },
+                attributes: {
+                    title: '',
+                    class: 'deleteColumn'
                 }
             };
         

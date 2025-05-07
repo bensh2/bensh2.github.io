@@ -32,6 +32,7 @@ function createTable()
         pagination: getvalue("#pagination"),
         search: getvalue("#search"),
         editColumn: getvalue("#editcolumn"),
+        deleteColumn: getvalue("#deletecolumn"),
     });
 
     let data = [ ["Wear","ללבוש"],["Forest","יער"],["Strange","מוזר"],["Keep","לשמור"],["Saw","ראה"],["Diary","יומן"],["Village","כפר"],
