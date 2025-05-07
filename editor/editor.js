@@ -32,9 +32,10 @@ export class Editor {
                 class: Object.keys(config.columnNames).length > 0 ? "" : "nopadding"  // remove padding for checkbox when column names are empty
             });
 
-        if (config.rowNumber)
+        if (config.rowNumber || config.rowColumn)
             this.#columns.push({
                 title: config.columnNames[columnId++],
+                visible: config.rowNumber,
                 field: "rownumber",
                 width: "5",
                 widthUnit: "%",
@@ -135,6 +136,25 @@ export class Editor {
             }
         };
 
+        if (config.rowColumn)
+            this.#buttons['btnRow'] = {
+                text: '',
+                icon: 'bi-list-ol',
+                event () {
+                    let columns = that.#table.bootstrapTable('getVisibleColumns').map(function (it) {
+                        return it.field
+                      });
+                    if (columns.includes("rownumber"))
+                        that.#table.bootstrapTable('hideColumn', 'rownumber');
+                    else
+                        that.#table.bootstrapTable('showColumn', 'rownumber');
+                },
+                attributes: {
+                  title: '',
+                  class: 'rowColumn'
+                }
+            };
+
         if (config.editColumn)
             this.#buttons['btnEdit'] = {
                 text: '',
@@ -154,7 +174,7 @@ export class Editor {
                 }
             };
 
-        if (config.editColumn)
+        if (config.deleteColumn)
             this.#buttons['btnDelete'] = {
                 text: '',
                 icon: 'bi-trash',

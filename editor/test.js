@@ -33,6 +33,7 @@ function createTable()
         search: getvalue("#search"),
         editColumn: getvalue("#editcolumn"),
         deleteColumn: getvalue("#deletecolumn"),
+        rowColumn: getvalue("#rowcolumn"),
     });
 
     let data = [ ["Wear","ללבוש"],["Forest","יער"],["Strange","מוזר"],["Keep","לשמור"],["Saw","ראה"],["Diary","יומן"],["Village","כפר"],
