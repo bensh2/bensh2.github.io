@@ -4,10 +4,16 @@ export class Editor {
     #columns;
     #buttons;
     #data;
+    #updatecallback;
+    #updatedelay;
+    #updatetimeout;
 
     constructor(config)
     {
         this.#tableid = config.tableid ?? "editor";
+        this.#updatecallback = config.updateCallback ?? null;
+        this.#updatedelay = 1000;
+        this.#updatetimeout = null;
         config.columnNames = config.columnNames ?? [];
         this.#initialize(config);
         this.#createHtml(config)
@@ -312,10 +318,29 @@ export class Editor {
                     let tr = td.parent();
                     let uniqueid = tr.attr("data-uniqueid");
                     that.updateCell(uniqueid, column, content); // update internal data
+                    that.#inlineUpdate();
                     //console.log(`Update row ${uniqueid} column ${column} to "${content}"`);
                 });
             });
 
         }
+    }
+
+    #invokeUpdateCallback()
+    {
+        if (this.#updatecallback)
+        {
+            this.#updatecallback(this.getData());
+        }
+    }
+
+    #inlineUpdate() // invoke user update callback with delay
+    {
+        if (this.#updatetimeout)
+            clearTimeout(this.#updatetimeout);
+
+        this.#updatetimeout = setTimeout( () => {
+            this.#invokeUpdateCallback();
+        }, this.#updatedelay);
     }
 }

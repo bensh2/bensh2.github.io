@@ -34,6 +34,12 @@ function createTable()
         editColumn: getvalue("#editcolumn"),
         deleteColumn: getvalue("#deletecolumn"),
         rowColumn: getvalue("#rowcolumn"),
+        updateCallback: (data) => {
+            localStorage.setItem("WordList", JSON.stringify(data));
+            let now = new Date();
+            let time = now.toLocaleTimeString();
+            console.log(`${time} localStorage data updated`);
+        }
     });
 
     let data = [ ["Wear","ללבוש"],["Forest","יער"],["Strange","מוזר"],["Keep","לשמור"],["Saw","ראה"],["Diary","יומן"],["Village","כפר"],
