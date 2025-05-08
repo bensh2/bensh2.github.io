@@ -141,13 +141,7 @@ export class Editor {
                 text: '',
                 icon: 'bi-list-ol',
                 event () {
-                    let columns = that.#table.bootstrapTable('getVisibleColumns').map(function (it) {
-                        return it.field
-                      });
-                    if (columns.includes("rownumber"))
-                        that.#table.bootstrapTable('hideColumn', 'rownumber');
-                    else
-                        that.#table.bootstrapTable('showColumn', 'rownumber');
+                    that.columnMode("rownumber");
                 },
                 attributes: {
                   title: '',
@@ -160,13 +154,7 @@ export class Editor {
                 text: '',
                 icon: 'bi-pencil',
                 event () {
-                    let columns = that.#table.bootstrapTable('getVisibleColumns').map(function (it) {
-                        return it.field
-                      });
-                    if (columns.includes("edit"))
-                        that.#table.bootstrapTable('hideColumn', 'edit');
-                    else
-                        that.#table.bootstrapTable('showColumn', 'edit');
+                    that.columnMode("edit");
                 },
                 attributes: {
                   title: '',
@@ -179,13 +167,7 @@ export class Editor {
                 text: '',
                 icon: 'bi-trash',
                 event () {
-                    let columns = that.#table.bootstrapTable('getVisibleColumns').map(function (it) {
-                        return it.field
-                        });
-                    if (columns.includes("delete"))
-                        that.#table.bootstrapTable('hideColumn', 'delete');
-                    else
-                        that.#table.bootstrapTable('showColumn', 'delete');
+                    that.columnMode("delete");
                 },
                 attributes: {
                     title: '',
@@ -245,6 +227,18 @@ export class Editor {
     toggle()
     {
         this.#table.bootstrapTable('toggleView')
+    }
+
+    columnMode(column)
+    {
+        const columns = ["rownumber", "edit", "delete"];
+        for (const colname of columns)
+        {
+            if (colname == column)
+                this.#table.bootstrapTable('showColumn', colname);
+            else
+                this.#table.bootstrapTable('hideColumn', colname);
+        }
     }
 
     #createTable(config)
