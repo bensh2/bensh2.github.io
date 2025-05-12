@@ -30,7 +30,10 @@ ul.pagination {
     margin-bottom: 10px;
 }
 
-#buttontoolbar button {
+#buttontoolbar  {
+    /*position: sticky;
+    top: 0px;
+    z-index: 1000;*/
 }
 
 th.bs-checkbox.nopadding div.th-inner {
@@ -53,4 +56,9 @@ div.btn-group {
 
 div[contenteditable] {
     overflow: hidden;
+    outline: none;
+}
+
+td.headword:has(div[contenteditable]), td.def:has(div[contenteditable]) {
+    border: 1px solid var(--bs-border-color);
 }

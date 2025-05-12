@@ -1,20 +1,24 @@
 export class Editor {
+    #config;
     #table;
     #tableid;
     #columns;
     #buttons;
     #data;
+    #inlinemode;
     #updatecallback;
     #updatedelay;
     #updatetimeout;
 
     constructor(config)
     {
+        this.#config = config;
+        this.#inlinemode = false;
         this.#tableid = config.tableid ?? "editor";
         this.#updatecallback = config.updateCallback ?? null;
         this.#updatedelay = 1000;
         this.#updatetimeout = null;
-        config.columnNames = config.columnNames ?? [];
+        this.#config.columnNames = config.columnNames ?? [];
         this.#initialize(config);
         this.#createHtml(config)
         this.#createTable(config);
@@ -65,7 +69,10 @@ export class Editor {
                 class: "tablecell headword",
                 sortable: config.sort ?? false,
                 formatter: config.inline ? (value, row) => {
-                    return "<div contenteditable='plaintext-only'>" + value + "</div>";
+                    if (that.#inlinemode)
+                        return "<div contenteditable='plaintext-only'>" + value + "</div>";
+                    else
+                        return value;
                 } : null
             });
         this.#columns.push(
@@ -77,7 +84,10 @@ export class Editor {
                 class: "tablecell def",
                 sortable: config.sort ?? false,
                 formatter: config.inline ? (value, row) => {
-                    return "<div contenteditable='plaintext-only'>" + value + "</div>";
+                    if (that.#inlinemode)
+                        return "<div contenteditable='plaintext-only'>" + value + "</div>";
+                    else
+                        return value;
                 } : null
             });
 
@@ -237,7 +247,11 @@ export class Editor {
 
     columnMode(column)
     {
-        const columns = ["rownumber", "edit", "delete"];
+        const columns = ["rownumber", "delete"];
+
+        if (!this.#config.inline)  // without inline editing, show the edit column
+            columns.push("edit");
+
         for (const colname of columns)
         {
             if (colname == column)
@@ -245,6 +259,16 @@ export class Editor {
             else
                 this.#table.bootstrapTable('hideColumn', colname);
         }
+
+        if (this.#config.inline)  // user clicked state control button "edit" and table inline parameter is true
+        {
+            this.#inlinemode = (column == "edit") ? true : false; // toggle inline mode
+            
+            this.#table.bootstrapTable('hideColumn', "headword"); // this will refresh the cells and the formatting, switching the inline editing on/off
+            this.#table.bootstrapTable('showColumn', "headword");
+        }
+
+        
     }
 
     #createTable(config)
