@@ -193,11 +193,17 @@ export class Editor {
             };*/
         this.#statebuttons = [];
         if (config.rowColumn)
-            this.#statebuttons.push({ name: "Display", id: "btnDisplay", icon: "bi-list-ol", event: () => { that.columnMode("rownumber") } });
+            this.#statebuttons.push({ name: "Display", column: "rownumber", id: "btnDisplay", icon: "bi-list-ol", 
+                help: "Total <span id='totalitems'></span> items",
+                event: () => { that.columnMode("rownumber") } });
         if (config.editColumn)
-            this.#statebuttons.push({ name: "Edit", id: "btnEdit", icon: "bi-pencil", event: () => { that.columnMode("edit") } });
+            this.#statebuttons.push({ name: "Edit", column: "edit", id: "btnEdit", icon: "bi-pencil", 
+                help: "Click on cell to edit",
+                event: () => { that.columnMode("edit") } });
         if (config.deleteColumn)
-            this.#statebuttons.push({ name: "Delete", id: "btnDelete", icon: "bi-trash", event: () => { that.columnMode("delete") } });
+            this.#statebuttons.push({ name: "Delete", column: "delete", id: "btnDelete", icon: "bi-trash", 
+                help: "Click on Delete icon to delete item",
+                event: () => { that.columnMode("delete") } });
         
     }
 
@@ -206,13 +212,14 @@ export class Editor {
         if (config.direction)
             $(config.element).css("direction", config.direction);
 
-        $(config.element).html(`<div id="tabletoolbar">
-        </div><table class="table" id="${this.#tableid}"></table>`);
+        $(config.element).html(`<div id="tabletoolbar"></div>
+            <table class="table" id="${this.#tableid}"></table>`);
         this.#table = $(`#${this.#tableid}`);
 
         if (this.#statebuttons.length > 0)
         {
-            $(`#tabletoolbar`).append('<div class="btn-group" role="group" aria-label="Editor state buttons Display Edit Delete"></div>');
+            $(`#tabletoolbar`).append(`<div class="row"><div class="col"><div class="btn-group" role="group" aria-label="Editor state buttons Display Edit Delete"></div></div></div>
+                `);
             let checked = "checked";
             for (const button of this.#statebuttons)
             {
@@ -237,6 +244,7 @@ export class Editor {
 
         this.#data = data;
         this.#table.bootstrapTable('load', this.#data);  // bootstrap-table uses this internally
+        this.updateTotalItems();
     }
 
     getData()
@@ -248,6 +256,18 @@ export class Editor {
             data.push([row.headword, row.def]);
         }
         return data;
+    }
+
+    getTotal()
+    {
+        if (this.#data)
+            return Object.keys(this.#data).length;
+        return 0;
+    }
+
+    updateTotalItems()
+    {
+        $("#totalitems").text(this.getTotal());
     }
 
     updateCell(id, column, value)
@@ -290,7 +310,17 @@ export class Editor {
             this.#table.bootstrapTable('showColumn', "headword");
         }
 
+        // toggle button help
         
+        for (const b of this.#statebuttons)
+        {
+            let card = $(`#collapse_${b.column}`);//new bootstrap.Collapse(`#collapse_${b.column}`, { toggle: false });  //$(`#collapse_${b.column}`);
+            if (b.column == column)
+                card.show();
+            else
+                card.hide();
+        }
+
     }
 
     #createTable(config)
@@ -329,7 +359,19 @@ export class Editor {
 
         this.#table.bootstrapTable(parameters);
 
+        $(".fixed-table-toolbar").after(`<div class="btnhelp"></div>`); // add help text for buttons only after table is created, to avoid respositioning
+        for (const button of this.#statebuttons)
+        {
+            $(`.btnhelp`).append(`<div class="collapse" id="collapse_${button.column}">
+            <div class="help">${button.help}</div></div>`);
+        }
+        
         //$("div.search.btn-group").css("float", (config.direction == "rtl") ? "left" : "right");
+
+        if (this.#statebuttons.length > 0)
+        {
+            $("#" + this.#statebuttons[0].id).trigger("click");
+        }
 
         this.#table.on('click-cell.bs.table', (event, field, value, row, $element) => {
             if (field == "selected")

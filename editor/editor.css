@@ -20,6 +20,7 @@ ul.pagination {
     overflow: hidden;
     white-space: nowrap;
     max-width: 100px;
+    padding: .5rem .5rem;
 }
 
 .bootstrap-table .delete, .bootstrap-table .edit, .bootstrap-table .confirm {
@@ -30,10 +31,22 @@ ul.pagination {
     margin-bottom: 10px;
 }
 
-#buttontoolbar  {
+.fixed-table-toolbar  {
     /*position: sticky;
     top: 0px;
     z-index: 1000;*/
+}
+
+.btnhelp {
+    /*height: 4em;*/
+}
+
+.btnhelp .help {
+    padding: 1em;
+    /*border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    margin-bottom: 1em;*/
+    width: fit-content;
 }
 
 th.bs-checkbox.nopadding div.th-inner {
@@ -59,6 +72,17 @@ div[contenteditable] {
     outline: none;
 }
 
-td.headword:has(div[contenteditable]), td.def:has(div[contenteditable]) {
+.table td:has(div[contenteditable]) {
     border: 1px solid var(--bs-border-color);
+}
+
+.table td:has(div[contenteditable]):hover {
+    background-color: #f8f9fa; 
+    cursor: pointer; 
+}
+
+.table div[contenteditable]:focus {
+    outline: 2px solid #0d6efd; 
+    outline-offset: -2px;
+    background-color: #e9ecef; 
 }
