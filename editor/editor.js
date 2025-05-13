@@ -9,6 +9,7 @@ export class Editor {
     #updatecallback;
     #updatedelay;
     #updatetimeout;
+    #statebuttons;
 
     constructor(config)
     {
@@ -152,7 +153,7 @@ export class Editor {
             }
         };
 
-        if (config.rowColumn)
+        /*if (config.rowColumn)
             this.#buttons['btnRow'] = {
                 text: '',
                 icon: 'bi-list-ol',
@@ -189,7 +190,14 @@ export class Editor {
                     title: '',
                     class: 'deleteColumn'
                 }
-            };
+            };*/
+        this.#statebuttons = [];
+        if (config.rowColumn)
+            this.#statebuttons.push({ name: "Display", id: "btnDisplay", icon: "bi-list-ol", event: () => { that.columnMode("rownumber") } });
+        if (config.editColumn)
+            this.#statebuttons.push({ name: "Edit", id: "btnEdit", icon: "bi-pencil", event: () => { that.columnMode("edit") } });
+        if (config.deleteColumn)
+            this.#statebuttons.push({ name: "Delete", id: "btnDelete", icon: "bi-trash", event: () => { that.columnMode("delete") } });
         
     }
 
@@ -198,8 +206,22 @@ export class Editor {
         if (config.direction)
             $(config.element).css("direction", config.direction);
 
-        $(config.element).html(`<div id="buttontoolbar"></div><table class="table" id="${this.#tableid}"></table>`);
+        $(config.element).html(`<div id="tabletoolbar">
+        </div><table class="table" id="${this.#tableid}"></table>`);
         this.#table = $(`#${this.#tableid}`);
+
+        if (this.#statebuttons.length > 0)
+        {
+            $(`#tabletoolbar`).append('<div class="btn-group" role="group" aria-label="Editor state buttons Display Edit Delete"></div>');
+            let checked = "checked";
+            for (const button of this.#statebuttons)
+            {
+                $(`#tabletoolbar .btn-group`).append(`<input type="radio" class="btn-check" name="statebtnradio" id="${button.id}" autocomplete="off" ${checked}>
+                  <label class="btn btn-outline-secondary" for="${button.id}">${button.name} <i class="bi ${button.icon}"></i></label>`);
+                $(`#${button.id}`).on("click", button.event);
+                checked = ""; // only first button is checked
+            }
+        }
     }
 
     setData(rawdata)
@@ -299,7 +321,8 @@ export class Editor {
             
             search: config.search ?? false,
             searchAlign: "left",
-            buttonsToolbar: "#buttontoolbar",
+            //buttonsToolbar: "#buttontoolbar",
+            toolbar: "#tabletoolbar",
             columns: this.#columns,
             
         };
