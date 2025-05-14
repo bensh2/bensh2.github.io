@@ -251,7 +251,7 @@ export class Editor {
                 </div>
                 </div>
             </div>
-            </div>;`
+            </div>`;
         $(this.#config.element).append(html);
         $("#deleteModal .confirm").on("click", (e) => {
             const deletewindow = bootstrap.Modal.getInstance('#deleteModal');
