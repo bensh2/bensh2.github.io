@@ -315,13 +315,14 @@ export class Editor {
 
     #deleteRow(uniqueid) 
     {
-        let row_index = this.#table.bootstrapTable('getData').findIndex((item) => item.id == parseInt(uniqueid));
+        /*let row_index = this.#table.bootstrapTable('getData').findIndex((item) => item.id == parseInt(uniqueid));
         if (row_index == -1)
             return;
         this.#table.bootstrapTable('remove', {
             field: 'id',
             values: [parseInt(uniqueid)]
-        });
+        });*/
+        this.#table.bootstrapTable('removeByUniqueId', uniqueid);
 
         this.updateTotalItems();
         this.#invokeUpdateCallback();
