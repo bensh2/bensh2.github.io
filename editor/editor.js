@@ -229,6 +229,37 @@ export class Editor {
                 checked = ""; // only first button is checked
             }
         }
+
+        this.#deleteModal();
+    }
+
+    #deleteModal()
+    {
+        let html = `<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Delete Item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary confirm">Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+                </div>
+            </div>
+            </div>;`
+        $(this.#config.element).append(html);
+        $("#deleteModal .confirm").on("click", (e) => {
+            const deletewindow = bootstrap.Modal.getInstance('#deleteModal');
+            deletewindow.hide();
+            if (!deletewindow.itemid)
+                return;
+            this.#deleteRow(deletewindow.itemid);
+        });
     }
 
     setData(rawdata)
@@ -280,6 +311,20 @@ export class Editor {
                 break;
             }
         }
+    }
+
+    #deleteRow(uniqueid) 
+    {
+        let row_index = this.#table.bootstrapTable('getData').findIndex((item) => item.id == parseInt(uniqueid));
+        if (row_index == -1)
+            return;
+        this.#table.bootstrapTable('remove', {
+            field: 'id',
+            values: [parseInt(uniqueid)]
+        });
+
+        this.updateTotalItems();
+        this.#invokeUpdateCallback();
     }
     
     toggle()
@@ -411,8 +456,25 @@ export class Editor {
                     //console.log(`Update row ${uniqueid} column ${column} to "${content}"`);
                 });
             });
-
         }
+
+        this.#table.on('post-body.bs.table', function (number, size) {
+            $(`#${that.#tableid} td i.delete`).on("click", (e) => {
+                const deletewindow = new bootstrap.Modal('#deleteModal', { keyboard: false });
+
+                document.querySelector("#deleteModal").addEventListener('hide.bs.modal', () => {  
+                    // prevent error message described here: https://github.com/twbs/bootstrap/issues/41005
+                    if (document.activeElement instanceof HTMLElement) {
+                        document.activeElement.blur();
+                    }
+                });
+
+                deletewindow.show();
+
+                let itemid = $(e.target).parent().parent().attr("data-uniqueid");
+                deletewindow.itemid = itemid;
+            });
+        });
     }
 
     #invokeUpdateCallback()
