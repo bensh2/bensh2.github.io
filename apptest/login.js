@@ -4,7 +4,7 @@ const supabase = createClient('https://ujqbqwpjlbmlthwgqdgm.supabase.co', 'eyJhb
 
 async function handleSignInWithGoogle(response) 
 {  
-    debugger;
+    //debugger;
     const { data, error } = await supabase.auth.signInWithIdToken({
             provider: 'google',
             token: response.credential,  
