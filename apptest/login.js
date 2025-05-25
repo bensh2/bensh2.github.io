@@ -14,7 +14,6 @@ async function handleSignInWithGoogle(response)
     console.log("Sign in with Google response:", data, error);
 }
 
-
 /*
 // esm version
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';  
