@@ -23,7 +23,8 @@
     import { makePurchaseRequest } from './purchase.js';
     const urlParams = new URLSearchParams(window.location.search);
     const priceId = urlParams.get("priceId");
-    makePurchaseRequest(priceId);
+    if (priceId)
+        makePurchaseRequest(priceId);
 </script>
 </body>
 </html>
