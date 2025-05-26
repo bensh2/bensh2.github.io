@@ -57,13 +57,18 @@ export async function makePurchaseRequest(priceId, quantity)
     });
     if (error instanceof FunctionsHttpError) {
         const errorMessage = await error.context.json();
-        console.log('Function returned an error', errorMessage)
+        console.log('Function returned an error', errorMessage);
+        if (errorMessage == -2) {
+            localStorage.setItem("redirectAfterLogin", "purchase.html?priceId=" + priceId + "&quantity=" + "1");
+            window.location.href = "login.html"; // Redirect to login page if not authenticated
+            return;
+        }
     } else if (error instanceof FunctionsRelayError) {
         console.log('Relay error:', error.message)
     } else if (error instanceof FunctionsFetchError) {
         console.log('Fetch error:', error.message)
+    } else {
+        window.location.href = data.url;
     }
-
-    window.location.href = data.url;
     return true;
 }
