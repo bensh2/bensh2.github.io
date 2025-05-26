@@ -32,7 +32,7 @@ export async function makePurchaseRequest(priceId, quantity)
         return false;
     }*/
 
-    const { data, error } = await supabase.functions.invoke('stripesession', {  body: 
+    const { data, error } = await supabaseClient.functions.invoke('stripesession', {  body: 
         JSON.stringify({
             priceId: priceId,
             successUrl: "https://bensh2.github.io/apptest/success",
