@@ -34,7 +34,7 @@ export async function makePurchaseRequest(priceId, quantity)
 
     if (response.status === 401) {
         localStorage.setItem("redirectAfterLogin", "purchase.html?priceId=" + priceId + "&quantity=" + "1");
-        window.location.href = "login.html"; // Redirect to login page if not authenticated
+        //window.location.href = "login.html"; // Redirect to login page if not authenticated
         return;
     }
 
