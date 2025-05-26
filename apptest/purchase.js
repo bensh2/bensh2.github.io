@@ -6,9 +6,6 @@ export async function makePurchaseRequest(priceId, quantity)
     }*/
     const response = await fetch("https://ujqbqwpjlbmlthwgqdgm.supabase.co/functions/v1/stripesession", {
         method: "POST",
-        headers: {
-             'Access-Control-Allow-Origin': '*', // required to avoid CORS issues
-        },
         body: JSON.stringify(
             { 
                 priceId: priceId,
