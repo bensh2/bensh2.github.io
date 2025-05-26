@@ -1,4 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';  
+import { FunctionsHttpError, FunctionsRelayError, FunctionsFetchError } from "https://esm.sh/@supabase/supabase-js";
+
 const supabase = createClient('https://ujqbqwpjlbmlthwgqdgm.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqcWJxd3BqbGJtbHRod2dxZGdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyMzM5MTYsImV4cCI6MjA2MjgwOTkxNn0.8FBSPslplJIIPMYE-f4Ij_nYiB6ut0ElxGxVaoqZLbs');
 
 /*const supabase = createClient('https://ujqbqwpjlbmlthwgqdgm.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqcWJxd3BqbGJtbHRod2dxZGdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyMzM5MTYsImV4cCI6MjA2MjgwOTkxNn0.8FBSPslplJIIPMYE-f4Ij_nYiB6ut0ElxGxVaoqZLbs');
@@ -12,7 +14,7 @@ export async function makePurchaseRequest(priceId, quantity)
         return false;
     }*/
 
-    let userauth = "";
+    /*let userauth = "";
     debugger
     const { userdata, error } = await supabase.auth.getSession();
     if (userdata && userdata.session) {
@@ -44,15 +46,23 @@ export async function makePurchaseRequest(priceId, quantity)
     if (!response.ok) {
         console.error("Error creating checkout session:", data.error);
         return false;
-    }
+    }*/
 
-    /*const { data, error } = await supabaseClient.functions.invoke('stripesession', {  body: 
+    const { data, error } = await supabase.functions.invoke('stripesession', {  body: 
         JSON.stringify({
             priceId: priceId,
             successUrl: "https://bensh2.github.io/apptest/success",
             cancelUrl: "https://bensh2.github.io/apptest/cancel"
         })
-     });*/
+    });
+    if (error instanceof FunctionsHttpError) {
+        const errorMessage = await error.context.json();
+        console.log('Function returned an error', errorMessage)
+    } else if (error instanceof FunctionsRelayError) {
+        console.log('Relay error:', error.message)
+    } else if (error instanceof FunctionsFetchError) {
+        console.log('Fetch error:', error.message)
+    }
 
     window.location.href = data.url;
     return true;
