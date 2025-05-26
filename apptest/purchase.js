@@ -58,7 +58,7 @@ export async function makePurchaseRequest(priceId, quantity)
     if (error instanceof FunctionsHttpError) {
         const errorMessage = await error.context.json();
         console.log('Function returned an error', errorMessage);
-        if (errorMessage == "-2") {
+        if (errorMessage.error == -2) {
             localStorage.setItem("redirectAfterLogin", "purchase.html?priceId=" + priceId + "&quantity=" + "1");
             window.location.href = "login.html"; // Redirect to login page if not authenticated
             return;
