@@ -13,6 +13,7 @@ export async function makePurchaseRequest(priceId, quantity)
     }*/
 
     let userauth = "";
+    debugger
     const { userdata, error } = await supabase.auth.getSession();
     if (userdata && userdata.session) {
         userauth = userdata.session.access_token; // Get the access token from the session
