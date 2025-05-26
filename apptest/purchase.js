@@ -1,7 +1,8 @@
 const { createClient } = supabase;
+
 const supabaseClient = createClient('https://ujqbqwpjlbmlthwgqdgm.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqcWJxd3BqbGJtbHRod2dxZGdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyMzM5MTYsImV4cCI6MjA2MjgwOTkxNn0.8FBSPslplJIIPMYE-f4Ij_nYiB6ut0ElxGxVaoqZLbs');
-/*let userauth = supabase.auth.session().access_token;
-console.log("User auth token:", userauth);*/
+let userauth = supabaseClient.auth.session().access_token;
+console.log("User auth token:", userauth);
 
 export async function makePurchaseRequest(priceId, quantity) 
 {
@@ -10,11 +11,11 @@ export async function makePurchaseRequest(priceId, quantity)
         return false;
     }*/
 
-    /*const response = await fetch("https://ujqbqwpjlbmlthwgqdgm.supabase.co/functions/v1/stripesession", {
+    const response = await fetch("https://ujqbqwpjlbmlthwgqdgm.supabase.co/functions/v1/stripesession", {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${userauth}`, // Use the access token for authentication
-        }
+        },
         body: JSON.stringify(
             { 
                 priceId: priceId,
@@ -34,24 +35,15 @@ export async function makePurchaseRequest(priceId, quantity)
     if (!response.ok) {
         console.error("Error creating checkout session:", data.error);
         return false;
-    }*/
+    }
 
-    const { data, error } = await supabaseClient.functions.invoke('stripesession', {  body: 
+    /*const { data, error } = await supabaseClient.functions.invoke('stripesession', {  body: 
         JSON.stringify({
             priceId: priceId,
             successUrl: "https://bensh2.github.io/apptest/success",
             cancelUrl: "https://bensh2.github.io/apptest/cancel"
         })
-     });
-
-    if (error instanceof FunctionsHttpError) {  
-        const errorMessage = await error.context.json();
-        console.log('Function returned an error', errorMessage);
-    } else if (error instanceof FunctionsRelayError) {
-          console.log('Relay error:', error.message);
-    } else if (error instanceof FunctionsFetchError) {
-          console.log('Fetch error:', error.message);
-    }
+     });*/
 
     window.location.href = data.url;
     return true;
