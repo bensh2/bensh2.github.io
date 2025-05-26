@@ -4,7 +4,7 @@ const supabaseClient = createClient('https://ujqbqwpjlbmlthwgqdgm.supabase.co', 
 $( function() {
 
     $("#offerButton").click(function() {
-        window.location.href = "purchase.html?priceId=prod_SMFQqydqibCzyp"; 
+        window.location.href = "purchase.html?priceId=price_1RRWvbQon05XhpcyEEuHqMWA"; 
 
         /*if (!checkUser()) {
             localStorage.setItem("redirectAfterLogin", "purchase.html");
