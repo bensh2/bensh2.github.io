@@ -16,17 +16,18 @@ export async function makePurchaseRequest(priceId, quantity)
     });
 
     if (response.status === 401) {
-        localStorage.setItem("redirectAfterLogin", "purchase.html?productId=" + priceId + "&quantity=" + "1");
+        localStorage.setItem("redirectAfterLogin", "purchase.html?priceId=" + priceId + "&quantity=" + "1");
         window.location.href = "login.html"; // Redirect to login page if not authenticated
         return;
     }
+
+    const data = await response.json();
 
     if (!response.ok) {
         console.error("Error creating checkout session:", data.error);
         return false;
     }
 
-    const data = await response.json();
     window.location.href = data.url;
-
+    return true;
 }
