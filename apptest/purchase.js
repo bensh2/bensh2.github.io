@@ -4,7 +4,7 @@ export async function makePurchaseRequest(priceId, quantity)
         console.error("Price ID is required");
         return false;
     }*/
-    const response = await fetch("https://your-supabase-url/functions/v1/stripe-checkout", {
+    const response = await fetch("https://ujqbqwpjlbmlthwgqdgm.supabase.co/functions/v1/stripesession", {
         method: "POST",
         body: JSON.stringify(
             { 
