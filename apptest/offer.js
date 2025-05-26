@@ -4,7 +4,14 @@ const supabaseClient = createClient('https://ujqbqwpjlbmlthwgqdgm.supabase.co', 
 $( function() {
 
     $("#offerButton").click(function() {
-        window.location.href = "purchase.html";
+        window.location.href = "purchase.html?priceId=prod_SMFQqydqibCzyp"; 
+
+        /*if (!checkUser()) {
+            localStorage.setItem("redirectAfterLogin", "purchase.html");
+            window.location.href = "login.html"; // Redirect to login page if not logged in
+            return;
+        } else
+            window.location.href = "purchase.html";*/
     });
 
 });
@@ -14,14 +21,13 @@ async function checkUser() {
 
     if (error) {
         console.error("Error fetching user:", error);
-        return null;
+        return false;
     }
 
     if (user) {
         console.log("User is logged in:", user);
-        return user;
+        return true;
     } else {
-        console.log("No user is logged in.");
-        return null;
+        return false; // User is not logged in
     }
 }

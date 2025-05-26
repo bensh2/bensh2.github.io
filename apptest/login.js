@@ -12,6 +12,16 @@ async function handleSignInWithGoogle(response)
         });
 
     console.log("Sign in with Google response:", data, error);
+    if (!error) {
+        let redirect = localStorage.getItem("redirectAfterLogin");
+        if (redirect) {
+            localStorage.removeItem("redirectAfterLogin");
+        } else {
+            redirect = "index.html"; // Default redirect if not set
+        }
+
+        window.location.href = redirect; // Redirect to the specified page after login
+    }
 }
 
 /*
