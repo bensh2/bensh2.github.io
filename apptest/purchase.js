@@ -59,8 +59,9 @@ export async function makePurchaseRequest(priceId, quantity)
         const errorMessage = await error.context.json();
         console.log('Function returned an error', errorMessage);
         if (errorMessage.code == -2) {
-            localStorage.setItem("redirectAfterLogin", "purchase.html?priceId=" + priceId + "&quantity=" + "1");
-            window.location.href = "login.html"; // Redirect to login page if not authenticated
+            //localStorage.setItem("redirectAfterLogin", "purchase.html?priceId=" + priceId + "&quantity=" + "1");
+            let redirect = "purchase.html?priceId=" + priceId + "&quantity=" + "1"
+            window.location.href = "login.html?redir" + encodeURIComponent(redirect); // Redirect to login page if not authenticated
             return;
         }
     } else if (error instanceof FunctionsRelayError) {

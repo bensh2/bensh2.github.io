@@ -13,9 +13,12 @@ async function handleSignInWithGoogle(response)
 
     console.log("Sign in with Google response:", data, error);
     if (!error) {
-        let redirect = localStorage.getItem("redirectAfterLogin");
+        // let redirect = localStorage.getItem("redirectAfterLogin");
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get("redir");
+        
         if (redirect) {
-            localStorage.removeItem("redirectAfterLogin");
+            //localStorage.removeItem("redirectAfterLogin");
         } else {
             redirect = "index.html"; // Default redirect if not set
         }
