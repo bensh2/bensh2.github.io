@@ -61,7 +61,7 @@ export async function makePurchaseRequest(priceId, quantity)
         if (errorMessage.code == -2) {
             //localStorage.setItem("redirectAfterLogin", "purchase.html?priceId=" + priceId + "&quantity=" + "1");
             let redirect = "purchase.html?priceId=" + priceId + "&quantity=" + "1"
-            window.location.href = "login.html?redir" + encodeURIComponent(redirect); // Redirect to login page if not authenticated
+            window.location.href = "login.html?redir=" + encodeURIComponent(redirect); // Redirect to login page if not authenticated
             return;
         }
     } else if (error instanceof FunctionsRelayError) {
