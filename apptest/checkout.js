@@ -43,6 +43,11 @@ async function initialize() {
             })
     });
 
+    if (!data || error) {
+        console.error("Error creating checkout session:", error);
+        return;
+    }
+
     // insert email into html element
     //document.getElementById("email").value = data.email;
 
