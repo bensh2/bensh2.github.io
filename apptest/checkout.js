@@ -49,7 +49,7 @@ async function initialize() {
     }
 
     // insert email into html element
-    //document.getElementById("email").value = data.email;
+    document.getElementById("email").value = data.email;
 
     const appearance = {
         theme: 'stripe',
