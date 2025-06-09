@@ -55,6 +55,20 @@ async function initialize() {
             })
     });
 
+    if (error instanceof FunctionsHttpError) {
+        const errorMessage = await error.context.json();
+        console.log('Function returned an error', errorMessage);
+        if (errorMessage.code == -2) {
+            let redirect = "checkout.html?priceId=" + priceId + "&quantity=" + "1"
+            window.location.href = "login.html?redir=" + encodeURIComponent(redirect); // Redirect to login page if not authenticated
+            return;
+        }
+    } else if (error instanceof FunctionsRelayError) {
+        console.log('Relay error:', error.message)
+    } else if (error instanceof FunctionsFetchError) {
+        console.log('Fetch error:', error.message)
+    } 
+
     if (!data || error) {
         console.error("Error creating checkout session:", error);
         return;
