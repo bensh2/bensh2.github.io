@@ -64,7 +64,7 @@ async function initialize() {
     const emailInput = document.getElementById("email");
     const emailErrors = document.getElementById("email-errors");
 
-    emailInput.addEventListener("input", () => {
+    /*emailInput.addEventListener("input", () => {
         // Clear any validation errors
         emailErrors.textContent = "";
     });
@@ -79,7 +79,7 @@ async function initialize() {
         if (!isValid) {
         emailErrors.textContent = message;
         }
-    });
+    });*/
 
     const paymentElement = checkout.createPaymentElement();
     paymentElement.mount("#payment-element");
