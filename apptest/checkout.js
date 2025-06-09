@@ -89,13 +89,14 @@ async function handleSubmit(e) {
   e.preventDefault();
   setLoading(true);
 
-  const email = document.getElementById("email").value;
+  // email is already provided in the checkout session
+  /*const email = document.getElementById("email").value;
   const { isValid, message } = await validateEmail(email);
   if (!isValid) {
     showMessage(message);
     setLoading(false);
     return;
-  }
+  }*/
 
   const { error } = await checkout.confirm();
 
