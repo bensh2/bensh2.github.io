@@ -22,6 +22,18 @@ document
   .querySelector("#payment-form")
   .addEventListener("submit", handleSubmit);
 
+function showPaymentElement() {
+  const spinner = document.querySelector(".spinner-div");
+  if (spinner) {
+    spinner.classList.add("d-none");
+  }
+
+  const paymentElement = document.querySelector("#payment-form");
+  if (paymentElement) {
+    paymentElement.classList.remove("d-none");
+  }
+}
+
 // Fetches a Checkout Session and captures the client secret
 async function initialize() {
   /*const promise = fetch("/create-checkout-session", {
@@ -83,6 +95,7 @@ async function initialize() {
 
     const paymentElement = checkout.createPaymentElement();
     paymentElement.mount("#payment-element");
+    showPaymentElement()
 }
 
 async function handleSubmit(e) {
