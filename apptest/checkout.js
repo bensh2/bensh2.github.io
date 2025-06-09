@@ -64,9 +64,11 @@ async function initialize() {
             return;
         }
     } else if (error instanceof FunctionsRelayError) {
-        console.log('Relay error:', error.message)
+        console.log('Relay error:', error.message);
+        return;
     } else if (error instanceof FunctionsFetchError) {
         console.log('Fetch error:', error.message)
+        return;
     } 
 
     if (!data || error) {
