@@ -25,14 +25,14 @@
           <form id="payment-form">
             <div class="row mb-3">
             <label class="col-sm-2 col-form-label" for="email">Email</label>
-            <div class="col-sm-10"><input class="form-control" type="text" id="email" placeholder="" /></div>
+            <div class="col-sm-10"><input class="form-control" type="text" id="email" placeholder="" disabled="disabled"/></div>
             </div>
             <div type="text" id="email-errors"></div>
             <h4>Payment</h4>
             <div id="payment-element">
               <!--Stripe.js injects the Payment Element-->
             </div>
-            <button id="submit" class="btn btn-primary">
+            <button id="submit" class="btn btn-primary mt-4">
               <div class="spinner hidden" id="spinner"></div>
               <span id="button-text">Pay now</span>
             </button>
