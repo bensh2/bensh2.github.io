@@ -16,22 +16,30 @@
     <script src="checkout.js" type="module" defer></script>
   </head>
   <body>
-    <!-- Display a payment form -->
-    <form id="payment-form">
-      <label>
-        Email
-        <input type="text" id="email" placeholder="you@example.com"
-      /></label>
-      <div type="text" id="email-errors"></div>
-      <h4>Payment</h4>
-      <div id="payment-element">
-        <!--Stripe.js injects the Payment Element-->
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-7 mx-auto">
+          <h1>Checkout</h1>
+          <p>Complete your purchase by entering your payment details below.</p>
+          <!-- Display a payment form -->
+          <form id="payment-form">
+            <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="email">Email</label>
+            <div class="col-sm-10"><input class="form-control" type="text" id="email" placeholder="" /></div>
+            </div>
+            <div type="text" id="email-errors"></div>
+            <h4>Payment</h4>
+            <div id="payment-element">
+              <!--Stripe.js injects the Payment Element-->
+            </div>
+            <button id="submit" class="btn btn-primary">
+              <div class="spinner hidden" id="spinner"></div>
+              <span id="button-text">Pay now</span>
+            </button>
+            <div id="payment-message" class="hidden"></div>
+          </form>
+        </div>
       </div>
-      <button id="submit">
-        <div class="spinner hidden" id="spinner"></div>
-        <span id="button-text">Pay now</span>
-      </button>
-      <div id="payment-message" class="hidden"></div>
-    </form>
+    </div>
   </body>
 </html>
