@@ -12,6 +12,12 @@ async function initialize() {
   const priceId = urlParams.get("priceId");
   /*const response = await fetch(`/session-status?session_id=${sessionId}`);
   const session = await response.json();*/
+
+  if (!sessionId) {
+    console.error("Missing session_id in the URL");
+    return;
+  }
+
   const { session, error } = await supabase.functions.invoke('sessionstatus', {  body: 
             JSON.stringify({
                 session_id: sessionId,
