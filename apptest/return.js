@@ -18,6 +18,8 @@ async function initialize() {
     return;
   }
 
+  debugger;
+
   const { session, error } = await supabase.functions.invoke('sessionstatus', {  body: 
             JSON.stringify({
                 session_id: sessionId,
