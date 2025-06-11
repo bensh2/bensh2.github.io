@@ -9,6 +9,7 @@ async function initialize()
 {
     const { data, error } = await supabase.functions.invoke('userproducts', {  body: 
             JSON.stringify({
+                user_id: supabase.auth.user()?.id
             })
     });
 
