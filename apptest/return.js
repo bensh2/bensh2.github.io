@@ -18,9 +18,9 @@ async function initialize() {
     return;
   }
 
-  debugger
+  //debugger
 
-  const { session, error } = await supabase.functions.invoke('sessionstatus', {  body: 
+  const { data, error } = await supabase.functions.invoke('sessionstatus', {  body: 
             JSON.stringify({
                 session_id: sessionId,
             })
@@ -40,18 +40,18 @@ async function initialize() {
     }
     return;
   }
-  if (!session) {
+  if (!data) {
     document.getElementById("status").textContent = "No session found";
     return;
   }
 
-  if (session.status == "open") {
+  if (data.status == "open") {
     // The payment failed or was canceled. Remount Checkout so that your customer can try again.
     //window.replace("http://localhost:4242/checkout.html")
     window.replace("checkout.html?priceId=" + priceId);
-  } else if (session.status == "complete") {
+  } else if (data.status == "complete") {
     document.getElementById("status").classList.add("d-none");
     document.getElementById("success").classList.remove("d-none");
-    document.getElementById("customer-email").textContent = session.customer_email
+    document.getElementById("customer-email").textContent = data.customer_email
   }
 }
