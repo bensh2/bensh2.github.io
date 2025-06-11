@@ -12,7 +12,7 @@ async function initialize() {
   const priceId = urlParams.get("priceId");
   /*const response = await fetch(`/session-status?session_id=${sessionId}`);
   const session = await response.json();*/
-  const { session, error } = await supabase.functions.invoke('checkoutsession', {  body: 
+  const { session, error } = await supabase.functions.invoke('sessionstatus', {  body: 
             JSON.stringify({
                 session_id: sessionId,
             })
