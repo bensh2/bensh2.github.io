@@ -7,7 +7,7 @@ initialize();
 
 async function initialize()
 {
-    const { data, error } = await supabase.functions.invoke('sessionstatus', {  body: 
+    const { data, error } = await supabase.functions.invoke('userproducts', {  body: 
             JSON.stringify({
                 session_id: sessionId,
             })
