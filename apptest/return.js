@@ -18,7 +18,7 @@ async function initialize() {
     return;
   }
 
-  debugger;
+  debugger
 
   const { session, error } = await supabase.functions.invoke('sessionstatus', {  body: 
             JSON.stringify({
