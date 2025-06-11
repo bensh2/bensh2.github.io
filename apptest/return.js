@@ -24,6 +24,25 @@ async function initialize() {
             })
     });
 
+  if (error) {
+    document.getElementById("status").textContent = "Error fetching session status";
+    if (error instanceof FunctionsHttpError) {
+        const errorMessage = await error.context.json();
+        console.error('Function returned an error', errorMessage);
+    } else if (error instanceof FunctionsRelayError) {
+        console.error('Function relay error', error.message);
+    } else if (error instanceof FunctionsFetchError) {
+        console.error('Function fetch error', error.message);
+    } else {
+        console.error('Unknown error', error);
+    }
+    return;
+  }
+  if (!session) {
+    document.getElementById("status").textContent = "No session found";
+    return;
+  }
+
   if (session.status == "open") {
     // The payment failed or was canceled. Remount Checkout so that your customer can try again.
     //window.replace("http://localhost:4242/checkout.html")
