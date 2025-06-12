@@ -33,6 +33,6 @@ async function initialize()
         return;
     }
 
-    document.getElementById("product-list").textContent = "Data retrieved successfully";
+    document.getElementById("product-list").textContent = JSON.stringify(data, null, 2);
     console.log(data);
 }
