@@ -32,6 +32,8 @@ async function initialize()
         document.getElementById("error-message").textContent = "No data found for the user";
         return;
     }
+    
+    console.log(data);
 
     let list = "<table class='table table-striped table-hover'><thead><tr><th>Product ID</th><th>Product Name</th><th>Quantity></th><th>Price</th><th>Currenccy></th><th>Date</th></tr></thead><tbody>";
     for (const item of data.items) {
@@ -40,5 +42,5 @@ async function initialize()
 
     list += "</tbody></table>";
     document.getElementById("product-list").innerHTML = list;
-    console.log(data);
+    
 }
