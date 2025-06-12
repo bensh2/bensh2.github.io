@@ -32,12 +32,12 @@ async function initialize()
         document.getElementById("error-message").textContent = "No data found for the user";
         return;
     }
-    
+
     console.log(data);
 
-    let list = "<table class='table table-striped table-hover'><thead><tr><th>Product ID</th><th>Product Name</th><th>Quantity></th><th>Price</th><th>Currenccy></th><th>Date</th></tr></thead><tbody>";
+    let list = "<table class='table table-striped table-hover'><thead><tr><th>Product ID</th><th>Product Name</th><th>Quantity</th><th>Price</th><th>Currenccy</th><th>Date</th></tr></thead><tbody>";
     for (const item of data.items) {
-        list += `<tr><td>${item.product_id}</td><td>${item.product_name}</td><td>${item.quantity}</td><td>${item.price}</td><td>${item.currency}</td><td>${new Date(item.createdAt * 1000).toLocaleDateString()}</td></tr>`;
+        list += `<tr><td>${item.productId}</td><td>${item.productName}</td><td>${item.quantity}</td><td>${item.price}</td><td>${item.currency}</td><td>${new Date(item.createdAt * 1000).toLocaleDateString()}</td></tr>`;
     }
 
     list += "</tbody></table>";
