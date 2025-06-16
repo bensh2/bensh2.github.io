@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
         let sessionid = session.id;
 
         const lineItems = await stripe.checkout.sessions.listLineItems(sessionid, {
-            limit: 100, expand: ['data.price.product'] // Expand product details
+            limit: 100, /*expand: ['data.price.product'] // Expand product details*/
         });
         for (const item of lineItems.data) {
             items.push( { 
@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
                 price: item.price.unit_amount, 
                 currency: item.price.currency, 
                 createdAt: session.created,
-                metadata: item.price.product.metadata
+                metadata: item.price.metadata
             });
         }
     }
