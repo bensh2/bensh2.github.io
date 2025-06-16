@@ -91,6 +91,7 @@ async function updateUserProducts(event)
         id: userId, 
         paymentid: event.data.object.payment_intent,
         startdate: event.data.object.created,
+        productid: event.data.object.metadata.priceId,
     }).select();
 
     if (error) { 

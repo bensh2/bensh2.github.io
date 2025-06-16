@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
         });
         for (const item of lineItems.data) {
             items.push( { 
-                productId: item.price.product.id, 
+                productId: item.price.id, //item.price.product.id, 
                 productName: item.description,
                 quantity: item.quantity, 
                 price: item.price.unit_amount, 

@@ -28,6 +28,7 @@ Deno.serve(async (req) => {
     }
 
     const { priceId } = await req.json();
+    const quantity = 1;
 
     if (!priceId) {
         return new Response(JSON.stringify({ error: 'Missing required parameters' }), { 
@@ -125,7 +126,7 @@ Deno.serve(async (req) => {
         line_items: [
             {
                 price: priceId,
-                quantity: 1,
+                quantity: quantity,
             },
         ],
         mode: "payment",
@@ -133,6 +134,8 @@ Deno.serve(async (req) => {
         metadata: {
             supabase_user_id: user.id,
             email: user.email,
+            priceId: priceId,
+            quantity: quantity
         },
         return_url: `${YOUR_DOMAIN}/return.html?priceId=${priceId}&session_id={CHECKOUT_SESSION_ID}`,  // Checkout replaces the variable with the Checkout Session ID.
     });
