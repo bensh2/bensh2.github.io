@@ -146,13 +146,19 @@ async function handleSubmit(e) {
   setLoading(false);
 }
 
-function showError(error) {
+function showError(error, code) {
   // Hide the spinner
   setLoading(false);
   console.error("Error:", error);
   // Show the error in the UI
   const errorElement = document.querySelector("#error-message");
-  errorElement.textContent = error.message;
+  let message = "An error occurred while processing your payment: <br>" + error;
+  if (code) {
+    message += `<br>Error code: ${code}`;
+  }
+  message += "<br>Please try again or contact support if the issue persists.";
+
+  errorElement.textContent = message;
   errorElement.classList.remove("d-none");
 
 }
