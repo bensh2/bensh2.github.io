@@ -57,22 +57,29 @@ async function initialize() {
 
     if (error instanceof FunctionsHttpError) {
         const errorMessage = await error.context.json();
-        console.log('Function returned an error', errorMessage);
+
         if (errorMessage.code == -2) {
+            console.log('User is not authenticated, redirecting to login page');
             let redirect = "checkout.html?priceId=" + priceId + "&quantity=" + "1"
             window.location.href = "login.html?redir=" + encodeURIComponent(redirect); // Redirect to login page if not authenticated
             return;
         }
+        showError(errorMessage.message, errorMessage.code);
+        return;
+
     } else if (error instanceof FunctionsRelayError) {
-        console.log('Relay error:', error.message);
+        //console.log('Relay error:', error.message);
+        showError(error.message);
         return;
     } else if (error instanceof FunctionsFetchError) {
-        console.log('Fetch error:', error.message)
+        //console.log('Fetch error:', error.message)
+        showError(error.message);
         return;
     } 
 
     if (!data || error) {
-        console.error("Error creating checkout session:", error);
+        //console.error("Error creating checkout session:", error);
+        showError("Error creating checkout session:" + error.message);
         return;
     }
 
@@ -137,6 +144,17 @@ async function handleSubmit(e) {
   showMessage(error.message);
 
   setLoading(false);
+}
+
+function showError(error) {
+  // Hide the spinner
+  setLoading(false);
+  console.error("Error:", error);
+  // Show the error in the UI
+  const errorElement = document.querySelector("#error-message");
+  errorElement.textContent = error.message;
+  errorElement.classList.remove("d-none");
+
 }
 
 // ------- UI helpers -------

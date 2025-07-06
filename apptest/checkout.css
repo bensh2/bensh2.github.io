@@ -4,3 +4,10 @@
 .spinner-border {
     width: 5rem; height: 5rem;
 }
+
+#error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
