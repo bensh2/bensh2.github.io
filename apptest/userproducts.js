@@ -35,9 +35,15 @@ async function initialize()
 
     console.log(data);
 
-    let list = "<table class='table table-striped table-hover'><thead><tr><th>Product ID</th><th>Product Name</th><th>Size</th><th>Creation Date</th><th>Status</th></tr></thead><tbody>";
+    /*let list = "<table class='table table-striped table-hover'><thead><tr><th>Product ID</th><th>Product Name</th><th>Size</th><th>Creation Date</th><th>Status</th></tr></thead><tbody>";
     for (const item of data.items) {
         list += `<tr><td>${item.productId}</td><td>${item.productName}</td><td>${item.size}</td><td>${new Date(item.createdAt * 1000).toLocaleDateString()}</td><td>${item.status}</td></tr>`;
+    }*/
+   
+    let list = "<table class='table table-striped table-hover'><thead><tr><th>Product ID</th><th>Product Name</th><th>Product Type</th><th>Size</th><th>Creation Date</th><th>Status</th><th></th></tr></thead><tbody>";
+    for (const item of data.items) {
+        let producttype = (item.productType == "p" ? "Purchase" : item.productType == "s" ? "Subscription" : "Unknown");
+        list += `<tr><td>${item.productId}</td><td>${item.productName}</td><td>${producttype}</td><td>${item.size}</td><td>${new Date(item.createdAt * 1000).toLocaleDateString()}</td><td>${item.status}</td><td><button class='btn btn-danger btn-sm' onclick='cancelProduct(${item.productId})'>Cancel</button></td></tr>`;
     }
 
     list += "</tbody></table>";
