@@ -46,7 +46,7 @@ async function initialize()
     for (const item of data.items) {
         let status = statusCodes[item.status] || "Unknown";
         let producttype = (item.productType == "p" ? "Purchase" : item.productType == "s" ? "Subscription" : "Unknown");
-        let button = (item.status == "A" && item.producttype == "s") ? `<button class='btn btn-danger btn-sm' onclick='cancelProduct(${item.productId})'>Cancel</button>` : "";
+        let button = (item.status == "A" && item.productType == "s") ? `<button class='btn btn-danger btn-sm' onclick='cancelProduct(${item.productId})'>Cancel</button>` : "";
 
         list += `<tr><td>${item.productId}</td><td>${item.productName}</td><td>${producttype}</td><td>${item.size}</td><td>${new Date(item.createdAt * 1000).toLocaleDateString()}</td><td>${status}</td><td>${button}</td></tr>`;
     }
