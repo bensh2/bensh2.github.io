@@ -56,9 +56,9 @@ async function initialize()
     
 }
 
-async function cancelProduct(purchaseId) {
+export async function cancelProduct(purchaseId) {
     document.getElementById("cancel-button-" + purchaseId).disabled = true; // Disable the button to prevent multiple clicks
-    
+
     const { data, error } = await supabase.functions.invoke('cancelproduct', { body: JSON.stringify({ purchase_id: purchaseId }) });
 
     if (error) {
