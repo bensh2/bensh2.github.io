@@ -6,7 +6,7 @@
 }
 
 button.status {
-    width: 5em;
+    width: 5em;  /* Adjust button width */
 }
 
 #error-message {
