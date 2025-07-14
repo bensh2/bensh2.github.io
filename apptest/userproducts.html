@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Thanks for your order!</title>
+  <title>My Products</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table.min.css">
-  <link rel="stylesheet" href="return.css">
+  <link rel="stylesheet" href="userproducts.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="userproducts.js" type="module" defer></script>
@@ -17,6 +17,10 @@
         <h1 class="text-center mt-5">Your Products</h1>
         <p class="text-center">Here are the products you have purchased:</p>
         <div id="error-message" class="alert alert-danger d-none" role="alert">
+        </div>
+        <div class="d-flex justify-content-center align-items-center spinner-div">
+            <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
+            </div>
         </div>
         <div id="product-list" class="mt-4">
             <!-- Product items will be dynamically inserted here -->

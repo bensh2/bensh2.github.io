@@ -1,0 +1,17 @@
+.spinner-div {
+    height: 50vh;
+}
+.spinner-div .spinner-border {
+    width: 5rem; height: 5rem;
+}
+
+button.status {
+    width: 5em;
+}
+
+#error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
