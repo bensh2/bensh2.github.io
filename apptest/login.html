@@ -11,8 +11,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.1/dist/bootstrap-table.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="login.js"></script>
+    <script src="login.js" type="module"></script>
     <script src="https://accounts.google.com/gsi/client" async></script>
 </head>
 <body>
@@ -38,6 +37,11 @@
                 data-size="large"
                 data-logo_alignment="left">
             </div>
-    
+<script>
+    async function handleSignInWithGoogle(response) {
+        console.log("Google Sign-In response:", response);
+        await handleSignInWithGoogleCB(response);
+    }
+</script>
 </body>
 </html>
