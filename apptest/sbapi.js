@@ -1,7 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';  
-import { srvAdress, srvKey } from './apiconfig.js'; // Assuming you have a config file for the Supabase address and key
+import { srvAddress, srvKey } from './apiconfig.js'; // Assuming you have a config file for the Supabase address and key
 
-const supabaseClient = createClient(srvAdress, srvKey);
+const supabaseClient = createClient(srvAddress, srvKey);
 
 export function sbApiClient()
 {
