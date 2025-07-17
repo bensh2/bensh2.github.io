@@ -42,7 +42,7 @@ async function initialize()
         list += `<tr><td>${item.productId}</td><td>${item.productName}</td><td>${item.size}</td><td>${new Date(item.createdAt * 1000).toLocaleDateString()}</td><td>${item.status}</td></tr>`;
     }*/
 
-    let statusCodes = { "A": "Active", "C": "Cancelled", "E": "Expired", "PC": "Pending Cancellation" };
+    let statusCodes = { "A": "Active", "C": "Cancelled", "E": "Expired", "P": "Paused", "PC": "Pending Cancellation" };
 
     let list = "<table class='table table-striped table-hover'><thead><tr><th>Product Name</th><th>Product Type</th><th>Size</th><th>Creation Date</th><th>Period Start</th><th>Period End</th><th>Status</th><th></th></tr></thead><tbody>";
     for (const item of data.items) {
