@@ -44,13 +44,14 @@ async function initialize()
 
     let statusCodes = { "A": "Active", "C": "Cancelled", "E": "Expired", "PC": "Pending Cancellation" };
 
-    let list = "<table class='table table-striped table-hover'><thead><tr><th>Product ID</th><th>Product Name</th><th>Product Type</th><th>Size</th><th>Creation Date</th><th>Status</th><th></th></tr></thead><tbody>";
+    let list = "<table class='table table-striped table-hover'><thead><tr><th>Product Name</th><th>Product Type</th><th>Size</th><th>Creation Date</th><th>Period Start</th><th>Period End</th><th>Status</th><th></th></tr></thead><tbody>";
     for (const item of data.items) {
         let status = statusCodes[item.status] || "Unknown";
         let producttype = (item.productType == "p" ? "Purchase" : item.productType == "s" ? "Subscription" : "Unknown");
         let button = (item.status == "A" && item.productType == "s") ? `<button id="cancel-button-${item.purchaseId}" class='status btn btn-danger btn-sm'>Cancel</button>` : "";
-
-        list += `<tr><td>${item.productId}</td><td>${item.productName}</td><td>${producttype}</td><td>${item.size}</td><td>${new Date(item.createdAt * 1000).toLocaleDateString()}</td><td>${status}</td><td>${button}</td></tr>`;
+        let periodStart = item.periodStart ? new Date(item.periodStart * 1000).toLocaleDateString() : "N/A";
+        let periodEnd = item.periodEnd ? new Date(item.periodEnd * 1000).toLocaleDateString() : "N/A";
+        list += `<tr><td>${item.productName}</td><td>${producttype}</td><td>${item.size}</td><td>${new Date(item.createdAt * 1000).toLocaleDateString()}</td><td>${periodStart}</td><td>${periodEnd}</td><td>${status}</td><td>${button}</td></tr>`;
     }
 
     list += "</tbody></table>";
