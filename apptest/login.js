@@ -7,13 +7,19 @@ initialize();
 
 function initialize() 
 {
-    setNonceValues();
-
+    // Initialize the Google Sign-In client
+    window.addEventListener('load', () => {
+        setNonceValues(); // Set the nonce values before loading the Google Sign-In client
+        // load script after setting nonce values
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        document.head.appendChild(script);
+    });
 }
 
 function setNonceValues()
 {
-    debugger;
     const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))))
     const encoder = new TextEncoder()
     const encodedNonce = encoder.encode(nonce)
@@ -28,7 +34,6 @@ function setNonceValues()
 
 export async function handleSignInWithGoogleCB(response) 
 {  
-    debugger;
     const { data, error } = await supabaseClient.auth.signInWithIdToken({
             provider: 'google',
             token: response.credential,  
