@@ -14,8 +14,8 @@ async function initialize() {
   const session = await response.json();*/
 
   if (!sessionId) {
-    console.error("Missing session_id in the URL");
-    return;
+    /*processError("Missing session_id in the URL");
+    return;*/
   }
 
   //debugger
@@ -27,21 +27,22 @@ async function initialize() {
     });
 
   if (error) {
-    document.getElementById("status").textContent = "Error fetching session status";
+    //document.getElementById("status").textContent = "Error fetching session status";
     if (error instanceof FunctionsHttpError) {
         const errorMessage = await error.context.json();
-        console.error('Function returned an error', errorMessage);
+        processError(errorMessage.error);
     } else if (error instanceof FunctionsRelayError) {
-        console.error('Function relay error', error.message);
+        processError('Function relay error:<br>' +  error.message);
     } else if (error instanceof FunctionsFetchError) {
-        console.error('Function fetch error', error.message);
+        processError('Function fetch error:<br>' +  error.message);
     } else {
-        console.error('Unknown error', error);
+        processError('Unknown error:<br>' +  error);
     }
     return;
   }
   if (!data) {
-    document.getElementById("status").textContent = "No session found";
+    //document.getElementById("status").textContent = "No session found";
+    processError("No session found");
     return;
   }
 
@@ -56,4 +57,11 @@ async function initialize() {
   } else if (data.status == "expired") {
     document.getElementById("status").textContent = "Session expired";
   }
+}
+
+function processError(msg) {
+  document.getElementById("errorMessage").innerHTML = "Error fetching session status: " + msg;
+  document.getElementById("error").classList.remove("d-none");
+  document.getElementById("status").classList.add("d-none");
+  console.error(msg);
 }
