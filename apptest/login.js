@@ -13,6 +13,7 @@ function initialize()
 
 function setNonceValues()
 {
+    debugger;
     const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))))
     const encoder = new TextEncoder()
     const encodedNonce = encoder.encode(nonce)
@@ -27,6 +28,7 @@ function setNonceValues()
 
 export async function handleSignInWithGoogleCB(response) 
 {  
+    debugger;
     const { data, error } = await supabaseClient.auth.signInWithIdToken({
             provider: 'google',
             token: response.credential,  
