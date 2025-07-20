@@ -42,11 +42,15 @@ async function initialize()
         list += `<tr><td>${item.productId}</td><td>${item.productName}</td><td>${item.size}</td><td>${new Date(item.createdAt * 1000).toLocaleDateString()}</td><td>${item.status}</td></tr>`;
     }*/
 
-    let statusCodes = { "A": "Active", "C": "Cancelled", "E": "Expired", "P": "Paused", "PC": "Pending Cancellation" };
+    let statusCodes = { "A": "Active", "C": "Cancelled", "E": "Expired", "P": "Paused", "PD": "Past Due", "PC": "Pending Cancellation" };
 
     let list = "<table class='table table-striped table-hover'><thead><tr><th>Product Name</th><th>Product Type</th><th>Size</th><th>Creation Date</th><th>Period Start</th><th>Period End</th><th>Status</th><th></th></tr></thead><tbody>";
     for (const item of data.items) {
         let status = statusCodes[item.status] || "Unknown";
+        if (item.status == "PD") {
+            status = `<span class='px-3 text-light bg-danger'>${status}</span>`; // Highlight 'Past Due' status
+        } 
+        
         let producttype = (item.productType == "p" ? "Purchase" : item.productType == "s" ? "Subscription" : "Unknown");
         let button = (item.status == "A" && item.productType == "s") ? `<button id="cancel-button-${item.purchaseId}" class='status btn btn-danger btn-sm'>Cancel</button>` : "";
         let periodStart = item.periodStart ? new Date(item.periodStart * 1000).toLocaleDateString() : "N/A";
