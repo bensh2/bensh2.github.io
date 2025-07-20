@@ -30,7 +30,7 @@ async function initialize() {
     //document.getElementById("status").textContent = "Error fetching session status";
     if (error instanceof FunctionsHttpError) {
         const errorMessage = await error.context.json();
-        processError(errorMessage.error);
+        processError(errorMessage.message);
     } else if (error instanceof FunctionsRelayError) {
         processError('Function relay error:<br>' +  error.message);
     } else if (error instanceof FunctionsFetchError) {
