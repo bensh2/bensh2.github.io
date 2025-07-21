@@ -19,13 +19,13 @@ async function initialize()
         document.getElementById("error-message").textContent = "Error fetching session status";
         if (error instanceof FunctionsHttpError) {
             const errorMessage = await error.context.json();
-            console.error('Function returned an error', errorMessage);
+           showError(errorMessage.message, errorMessage.code);
         } else if (error instanceof FunctionsRelayError) {
-            console.error('Function relay error', error.message);
+            showError(errorMessage.message, errorMessage.code);
         } else if (error instanceof FunctionsFetchError) {
-            console.error('Function fetch error', error.message);
+            showError(errorMessage.message, errorMessage.code);
         } else {
-            console.error('Unknown error', error);
+            showError(errorMessage.message, errorMessage.code);
         }
         return;
     }
@@ -107,4 +107,22 @@ export async function cancelProduct(purchaseId) {
     alert("Product cancelled successfully. You can continue to use it until the end of the billing period.");
     
     window.location.reload(); // reload page
+}
+
+function showError(error, code) {
+  // Hide the spinner
+  document.querySelector(".spinner-div").classList.add("d-none");
+
+  console.error("Error:", error);
+  // Show the error in the UI
+  const errorElement = document.querySelector("#error-message");
+  let message = "An error occurred: <br><br>" + error;
+  if (code) {
+    message += `<br>(Error code: ${code})`;
+  }
+  message += "<br><br>Please try again or contact support if the issue persists.";
+
+  errorElement.innerHTML = message;
+  errorElement.classList.remove("d-none");
+
 }
