@@ -10,6 +10,9 @@ export function sbApiClient()
 
 export async function getUser()
 {
-    const { data: { user } } = await supabaseClient.auth.getUser()
-    return user;
+    const { data, error } = await supabaseClient.auth.getClaims();
+    console.log("getUser", data, error);
+    return data?.claims;
+    //const { data: { user } } = await supabaseClient.auth.getUser()
+    //return user;
 }

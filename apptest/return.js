@@ -56,6 +56,8 @@ async function initialize() {
     //document.getElementById("customer-email").textContent = data.customer_email
   } else if (data.status == "expired") {
     document.getElementById("status").textContent = "Session expired";
+  } else {
+    processError("Unknown session status: " + data.status);
   }
 }
 
