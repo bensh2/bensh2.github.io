@@ -105,7 +105,7 @@ async function uploadFile2(file) // upload to an edge function directly
 
     let headers = { apikey: srvKey, authorization: 'Bearer ' + token };
     let { data, status, error } = await uploadFileProgress('https://ujqbqwpjlbmlthwgqdgm.supabase.co/functions/v1/processfile2', headers, formdata,
-        function(value) { $( "#result" ).show().html(`Progress: ${value}`) }
+        function(value) { $( "#result" ).show().html(`Uploading file: ${value}%`) }
     );
     console.log(data, status, error);
     data = JSON.parse(data);
