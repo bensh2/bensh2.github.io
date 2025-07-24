@@ -1,5 +1,6 @@
 import { sbApiClient } from './sbapi.js'; // Import the Supabase API client
-import { srvKey } from './apiconfig.js';
+import { srvKey, srvAddress } from './apiconfig.js';
+import { Upload as tusUpload } from 'https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/+esm'
 
 const supabaseClient = sbApiClient();
 
@@ -36,7 +37,7 @@ async function uploadFile1(file) // upload to storage
 {
     const fileSize = file.size;
     const fileType = file.type;
-
+``
     if (fileSize > 5300000) {
         //console.error('File size exceeds limit of 5MB');
         $( "#wait" ).hide();
@@ -55,13 +56,36 @@ async function uploadFile1(file) // upload to storage
     if (!userid)
     {
         console.error("No userid found");
+        $( "#wait" ).hide();
+        $( "#result" ).show().html("You must login to upload a file");
         return false;
     }
 
     let filename = userid + "/" + String(Date.now());//"listfile.data";
 
-    const { data, error } = await supabaseClient.storage.from('useruploads').upload(filename, file, { cacheControl: '0' });
+    // resumable file upload using external library; provides progress indicator
+    let error;
+    let data;
+    try {
+        data = await uploadResumableFile("useruploads", filename, file,
+            function(value) { $( "#result" ).show().html(`Uploading file: ${value}%`) }
+        );
+    }
+    catch (error)
+    {
+        console.error('Error uploading file:', error);
+        $( "#wait" ).hide();
+        $( "#result" ).show().text(error);
+        return false;
+    }
 
+    console.log('File uploaded successfully');
+    $( "#wait" ).hide();
+    $( "#result" ).show().html("Uploaded file to storage: " + JSON.stringify(data.options.metadata) + "<br><br>Calling EF to process it...");
+
+    /*
+    // standard file upload using supabase api
+    const { data, error } = await supabaseClient.storage.from('useruploads').upload(filename, file, { cacheControl: '0' });
     if (error) {
         console.error('Error uploading file:', error);
         $( "#wait" ).hide();
@@ -71,7 +95,7 @@ async function uploadFile1(file) // upload to storage
         console.log('File uploaded successfully');
         $( "#wait" ).hide();
         $( "#result" ).show().html("Uploaded file to storage: " + JSON.stringify(data) + "<br><br>Calling EF to process it...");
-    }
+    }*/
 
     const { data: data2, error: error2 } = await supabaseClient.functions.invoke('processfile1', 
         { body: JSON.stringify( {filename: filename, filetype: fileType })});
@@ -79,7 +103,7 @@ async function uploadFile1(file) // upload to storage
     if (error2) {
         console.error('Error processing file:', error2);
         $( "#wait" ).hide();
-        $( "#result" ).show().text(JSON.stringify(error2));
+        $( "#result" ).show().text(error2);
         return false;
     } else {
         console.log('File processed successfully');
@@ -124,11 +148,13 @@ async function uploadFile2(file) // upload to an edge function directly
     if (!token)
     {
         console.error("No access token found");
+        $( "#wait" ).hide();
+        $( "#result" ).show().html("You must login to upload a file");
         return false;
     }
 
     let headers = { apikey: srvKey, authorization: 'Bearer ' + token };
-    let { data, status, error } = await uploadFileProgress('https://ujqbqwpjlbmlthwgqdgm.supabase.co/functions/v1/processfile2', headers, formdata,
+    let { data, status, error } = await uploadFileProgress(`${srvAddress}/functions/v1/processfile2`, headers, formdata,
         function(value) { $( "#result" ).show().html(`Uploading file: ${value}%`) }
     );
     console.log(data, status, error);
@@ -185,6 +211,57 @@ async function uploadFileProgress(url, headers, body, progress)
 
         xhr.send(body);
     });
+}
+
+async function uploadResumableFile(bucketName, fileName, file, progresscallback) 
+{
+    const { data: { session } } = await supabaseClient.auth.getSession();
+
+    return new Promise((resolve, reject) => {
+        var upload = new tusUpload(file, {
+            endpoint: `${srvAddress}/storage/v1/upload/resumable`,
+            retryDelays: [0, 3000, 5000, 10000, 20000],
+            headers: {
+                authorization: `Bearer ${session.access_token}`,
+                //'x-upsert': 'true', // optionally set upsert to true to overwrite existing files
+            },
+            uploadDataDuringCreation: true,
+            removeFingerprintOnSuccess: true, // Important if you want to allow re-uploading the same file https://github.com/tus/tus-js-client/blob/main/docs/api.md#removefingerprintonsuccess
+            metadata: {
+                bucketName: bucketName,
+                objectName: fileName,
+                contentType: file.type,
+                cacheControl: 3600,
+            },
+            chunkSize: 6 * 1024 * 1024, // NOTE: it must be set to 6MB (for now) do not change it
+            onError: function (error) {
+                console.log('Failed because: ' + error)
+                reject(error)
+            },
+            onProgress: function (bytesUploaded, bytesTotal) {
+                var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+                //console.log(bytesUploaded, bytesTotal, percentage + '%');
+                if (progresscallback)
+                    progresscallback(Math.round(percentage));
+            },
+            onSuccess: function () {
+                console.log('Download %s from %s', upload.file.name, upload.url)
+                resolve(upload)
+            },
+        })
+
+
+        // Check if there are any previous uploads to continue.
+        return upload.findPreviousUploads().then(function (previousUploads) {
+            // Found previous uploads so we select the first one.
+            if (previousUploads.length) {
+                upload.resumeFromPreviousUpload(previousUploads[0])
+            }
+
+            // Start the upload
+            upload.start()
+        })
+    })
 }
 
 async function uploadFile3(file) 
