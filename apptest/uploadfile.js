@@ -34,9 +34,33 @@ $( async function() {
 
 async function uploadFile1(file) // upload to storage
 {
-    let filename = "listfile.data";
+    const fileSize = file.size;
+    const fileType = file.type;
 
-    const { data, error } = await supabaseClient.storage.from('useruploads').upload(filename, file, { cacheControl: '0', upsert: true });
+    if (fileSize > 5300000) {
+        //console.error('File size exceeds limit of 5MB');
+        $( "#wait" ).hide();
+        $( "#result" ).show().text('File size exceeds limit of 5MB');
+        return;
+    }
+
+    const { data: sessiondata, error: sessionerror } = await supabaseClient.auth.getSession();
+    //console.log(sessiondata);
+    if (sessionerror)
+    {
+        console.error(sessionerror);
+        return false;
+    }
+    let userid = sessiondata?.session?.user?.id;
+    if (!userid)
+    {
+        console.error("No userid found");
+        return false;
+    }
+
+    let filename = userid + "/" + String(Date.now());//"listfile.data";
+
+    const { data, error } = await supabaseClient.storage.from('useruploads').upload(filename, file, { cacheControl: '0' });
 
     if (error) {
         console.error('Error uploading file:', error);
@@ -50,7 +74,7 @@ async function uploadFile1(file) // upload to storage
     }
 
     const { data: data2, error: error2 } = await supabaseClient.functions.invoke('processfile1', 
-        { body: JSON.stringify( {filename: filename })});
+        { body: JSON.stringify( {filename: filename, filetype: fileType })});
 
     if (error2) {
         console.error('Error processing file:', error2);
@@ -61,7 +85,7 @@ async function uploadFile1(file) // upload to storage
         console.log('File processed successfully');
         let link = data2.url;
         $( "#wait" ).hide();
-        $( "#result" ).show().html(`File made available at URL for 5 minutes: <br><a target='_blank' href='${link}'>${link}</a>`);
+        $( "#result" ).show().html(`File (${data2.filetype}) made available at URL for 5 minutes: <br><a target='_blank' href='${link}'>${link}</a>`);
     }
 }
 
