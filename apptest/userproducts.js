@@ -7,7 +7,7 @@ initialize();
 
 async function initialize()
 {
-    const { data, error } = await supabase.functions.invoke('userproducts', {  body: 
+    /*const { data, error } = await supabase.functions.invoke('userproducts', {  body: 
             JSON.stringify({
                 user_id: null
             })
@@ -33,7 +33,13 @@ async function initialize()
     if (!data) {
         document.getElementById("error-message").textContent = "No data found for the user";
         return;
-    }
+    }*/
+
+    const data = await getProducts();
+    document.querySelector(".spinner-div").classList.add("d-none"); // Hide the spinner
+    
+    if (!data)
+        return false;
 
     console.log(data);
 
@@ -67,6 +73,41 @@ async function initialize()
         });
     });
     
+}
+
+async function getProducts()
+{
+    const { data, error } = await supabase.from('userproducts').select().order('created', { ascending: false }); 
+
+    if (error) {
+        showError("Unable to fetch user products");
+        return false;
+    }
+
+    if (!data || data.length === 0) {
+        return { items: [] }; // Return empty array if no products found
+    }
+
+    let items = [];
+
+    for (const item of data) {
+        items.push({
+        purchaseId: item.purchaseid,
+        productId: item.productid,
+        productName: item.productname,
+        productType: item.producttype,
+        quantity: 1,
+        price: 0,
+        currency: "",
+        size: item.size,
+        createdAt: item.created,
+        status: item.status,
+        periodStart: item.starttstmp,
+        periodEnd: item.endtstmp
+        });
+    }
+
+    return { items: items }; // Return the items array
 }
 
 export async function cancelProduct(purchaseId) {
