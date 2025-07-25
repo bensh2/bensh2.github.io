@@ -51,7 +51,7 @@ export async function handleSignInWithGoogleCB(response)
             redirect = "index.html"; // Default redirect if not set
         }
 
-        window.location.href = redirect; // Redirect to the specified page after login
+        window.location.replace(redirect); // Redirect to the specified page after login
     }
 }
 

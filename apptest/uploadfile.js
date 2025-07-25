@@ -1,6 +1,13 @@
-import { sbApiClient } from './sbapi.js'; // Import the Supabase API client
+import { sbApiClient, getUser } from './sbapi.js'; // Import the Supabase API client
 import { srvKey, srvAddress } from './apiconfig.js';
 import { Upload as tusUpload } from 'https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/+esm'
+
+const user = await getUser();
+if (!user)
+{
+    let redirect = "uploadfile.html";
+    window.location.href = "login.html?redir=" + encodeURIComponent(redirect);
+}
 
 const supabaseClient = sbApiClient();
 
