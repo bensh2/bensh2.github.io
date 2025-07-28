@@ -141,7 +141,7 @@ async function handleSubmit(e) {
   // your `return_url`. For some payment methods like iDEAL, your customer will
   // be redirected to an intermediate site first to authorize the payment, then
   // redirected to the `return_url`.
-  showMessage(error.message);
+  alert(error.message);
 
   setLoading(false);
 }
