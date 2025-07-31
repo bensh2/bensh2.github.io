@@ -38,7 +38,294 @@ $( async function() {
             uploadFile2(file);
         }
     });
+
+    $( "#fileSelect3" ).on("click", function() {
+        //$( "#fileElem3" ).click();
+        testGemini();
+    });
+
+    $( "#fileElem3" ).on("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            $( "#wait" ).show();
+            $( "#result" ).hide();
+            uploadFile3(file);
+        }
+    });
+
+    $( "#fileSelect4" ).on("click", function() {
+        $( "#fileElem4" ).click();
+    });
+
+    $( "#fileElem4" ).on("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            $( "#wait" ).show();
+            $( "#result" ).hide();
+            uploadImage(file);
+        }
+    });
+
+    $( "#fileSelect5" ).on("click", function() {
+        $( "#fileElem5" ).click();
+    });
+
+    $( "#fileElem5" ).on("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            $( "#wait" ).show();
+            $( "#result" ).hide();
+            uploadImage64(file);
+        }
+    });
+
+    $( "#fileSelect6" ).on("click", function() {
+        $( "#fileElem6" ).click();
+    });
+
+    $( "#fileElem6" ).on("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            $( "#wait" ).show();
+            $( "#result" ).hide();
+            uploadImage64EF(file);
+        }
+    });
 });
+
+async function uploadImage(file)
+{
+    let bm = new benchmark();
+    console.time("uploadprocess");
+    const fileSize = file.size;
+    const fileType = file.type;
+
+    if (fileSize > 5300000) {
+        //console.error('File size exceeds limit of 5MB');
+        $( "#wait" ).hide();
+        $( "#result" ).show().text('File size exceeds limit of 5MB');
+        return;
+    }
+
+    const { data: sessiondata, error: sessionerror } = await supabaseClient.auth.getSession();
+    //console.log(sessiondata);
+    if (sessionerror)
+    {
+        console.error(sessionerror);
+        return false;
+    }
+    let userid = sessiondata?.session?.user?.id;
+    if (!userid)
+    {
+        console.error("No userid found");
+        $( "#wait" ).hide();
+        $( "#result" ).show().html("You must login to upload a file");
+        return false;
+    }
+
+    let filename = userid + "/" + String(Date.now());//"listfile.data";
+
+    // resumable file upload using external library; provides progress indicator
+    let error;
+    let data;
+    try {
+        data = await uploadResumableFile("useruploads", filename, file,
+            function(value) { $( "#result" ).show().html(`Uploading file: ${value}%`) }
+        );
+    }
+    catch (error)
+    {
+        console.error('Error uploading file:', error);
+        $( "#wait" ).hide();
+        $( "#result" ).show().text(error);
+        return false;
+    }
+
+    console.log('File uploaded successfully');
+    $( "#wait" ).hide();
+    //$( "#result" ).show().html("Uploaded file to storage: " + JSON.stringify(data.options.metadata) + "<br><br>Calling EF to process it...");
+    $( "#result" ).show().html("Processing image...");
+
+    const { data: data2, error: error2 } = await supabaseClient.functions.invoke('processimage', 
+        { body: JSON.stringify( {filename: filename, filetype: fileType })});
+
+    if (error2) {
+        console.error('Error processing file:', error2);
+        $( "#wait" ).hide();
+        $( "#result" ).show().text(error2);
+        return false;
+    } else {
+        let elapsed = bm.get();
+        console.timeEnd("uploadprocess");
+        console.log('File processed successfully');
+        $( "#wait" ).hide();
+        let text_data = data2.message;
+        $( "#result" ).show().html("Benchmark: " + elapsed + "s<br><br>Result:<pre>" + text_data + "</pre>");
+    }
+
+}
+
+async function uploadImage64(file)
+{
+    let bm = new benchmark();
+    console.time("uploadprocess");
+
+    const fileType = file.type;
+    const fileSize = file.size;
+
+    if (fileSize > 4000000) {
+        //console.error('File size exceeds limit of 4MB');
+        $( "#wait" ).hide();
+        $( "#result" ).show().text('File size exceeds limit of 4MB');
+        return;
+    }
+
+    const file64 = await convertFileToBase64(file.name, file);
+
+    const { data: sessiondata, error: sessionerror } = await supabaseClient.auth.getSession();
+    //console.log(sessiondata);
+    if (sessionerror)
+    {
+        console.error(sessionerror);
+        return false;
+    }
+    let userid = sessiondata?.session?.user?.id;
+    if (!userid)
+    {
+        console.error("No userid found");
+        $( "#wait" ).hide();
+        $( "#result" ).show().html("You must login to upload a file");
+        return false;
+    }
+
+    let filename = userid + "/" + String(Date.now());//"listfile.data";
+
+    // resumable file upload using external library; provides progress indicator
+    let error;
+    let data;
+    try {
+        data = await uploadResumableFile("useruploads", filename, file64,
+            function(value) { $( "#result" ).show().html(`Uploading file: ${value}%`) }
+        );
+    }
+    catch (error)
+    {
+        console.error('Error uploading file:', error);
+        $( "#wait" ).hide();
+        $( "#result" ).show().text(error);
+        return false;
+    }
+
+    console.log('File uploaded successfully');
+    $( "#wait" ).hide();
+
+    $( "#result" ).show().html("Processing image...");
+
+    const { data: data2, error: error2 } = await supabaseClient.functions.invoke('processimage2', 
+        { body: JSON.stringify( {filename: filename, filetype: fileType })});
+
+    if (error2) {
+        console.error('Error processing file:', error2);
+        $( "#wait" ).hide();
+        $( "#result" ).show().text(error2);
+        return false;
+    } else {
+        let elapsed = bm.get();
+        console.timeEnd("uploadprocess");
+        console.log('File processed successfully');
+        $( "#wait" ).hide();
+        let text_data = data2.message;
+        $( "#result" ).show().html("Benchmark: " + elapsed + "s<br><br>Result:<pre>" + text_data + "</pre>");
+    }
+
+}
+
+async function uploadImage64EF(file) // upload to an edge function directly
+{
+    let bm = new benchmark();
+
+    const fileSize = file.size;
+    const fileType = file.type;
+
+    if (fileSize > 4500000) {
+        //console.error('File size exceeds limit of 5MB');
+        $( "#wait" ).hide();
+        $( "#result" ).show().text('File size exceeds limit of 5MB');
+        return;
+    }
+
+    console.time("uploadprocess");
+
+    const file64 = await convertFileToBase64(file.name, file);
+
+    let formdata = new FormData();
+    formdata.append(file.name, file64);
+    let entries = formdata.entries();
+    for (let entry of entries) {
+        console.log(entry[0], entry[1]);
+    }
+
+    const { data: sessiondata, error: sessionerror } = await supabaseClient.auth.getSession();
+    //console.log(sessiondata);
+    if (sessionerror)
+    {
+        console.error(sessionerror);
+        return false;
+    }
+    let token = sessiondata?.session?.access_token;
+    if (!token)
+    {
+        console.error("No access token found");
+        $( "#wait" ).hide();
+        $( "#result" ).show().html("You must login to upload a file");
+        return false;
+    }
+
+    let headers = { apikey: srvKey, authorization: 'Bearer ' + token };
+    let { data, status, error } = await uploadFileProgress(`${srvAddress}/functions/v1/processimage3`, headers, formdata,
+        function(value) { 
+            $( "#result" ).show().html(`Uploading file: ${value}%`);
+            if (value >= 100) {
+                $( "#result" ).show().html("Processing image...");
+            }
+        }
+    );
+    console.log(data, status, error);
+
+    data = JSON.parse(data);
+
+    if (error) {
+        console.error('Error processing file:', error);
+        $( "#wait" ).hide();
+        $( "#result" ).show().text(error);
+        return false;
+    } else {
+        let elapsed = bm.get();
+        console.timeEnd("uploadprocess");
+        console.log('File processed successfully');
+        $( "#wait" ).hide();
+        let text_data = data.message;
+        $( "#result" ).show().html("Benchmark: " + elapsed + "s<br><br>Result:<pre>" + text_data + "</pre>");
+    }
+}
+
+async function testGemini() 
+{
+    const { data, error } = await supabaseClient.functions.invoke('processfile3', 
+        { body: JSON.stringify( {filename: "", filetype: "" })});
+
+    if (error) {
+        console.error('Error processing file:', error);
+        $( "#wait" ).hide();
+        $( "#result" ).show().text(error);
+        return false;
+    } else {
+        console.log('File processed successfully');
+        $( "#wait" ).hide();
+        console.log(data);
+        $( "#result" ).show().html(JSON.stringify(data));
+    }
+}
 
 async function uploadFile1(file) // upload to storage
 {
@@ -299,4 +586,38 @@ async function uploadFile3(file)
         }
     };
     reader.readAsArrayBuffer(file);
+}
+
+async function convertFileToBase64(filename, file) 
+{
+    let blob = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+
+    if (!blob) {
+        console.log('Failed to read file as Base64');
+        throw new Error('Failed to read file as Base64');
+    }
+    
+    let data = blob.split(',')[1]; // Return only the base64 part
+
+    const newfile = new File([data], filename, { type: file.type, lastModified: Date.now() });
+
+    return newfile;
+}
+
+class benchmark {
+    constructor(name) {
+        this.name = name;
+        this.startTime = performance.now();
+    }
+
+    get() {
+        const endTime = performance.now();
+        const duration = endTime - this.startTime;
+        return duration / 1000; // return duration in seconds
+    }
 }
