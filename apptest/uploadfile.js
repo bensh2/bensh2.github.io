@@ -1,6 +1,7 @@
 import { sbApiClient, getUser } from './sbapi.js'; // Import the Supabase API client
 import { srvKey, srvAddress } from './apiconfig.js';
 import { Upload as tusUpload } from 'https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/+esm'
+import { FunctionsHttpError, FunctionsRelayError, FunctionsFetchError } from "https://esm.sh/@supabase/supabase-js";
 
 const user = await getUser();
 if (!user)
@@ -91,7 +92,57 @@ $( async function() {
             uploadImage64EF(file);
         }
     });
+
+    $( "#fileSelect7" ).on("click", function() {
+        $( "#fileElem7" ).click();
+    });
+
+    $( "#fileElem7" ).on("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            $( "#wait" ).show();
+            $( "#result" ).hide();
+            uploadJson(file);
+        }
+    });
 });
+
+async function uploadJson(file)
+{
+    const reader = new FileReader();
+
+    reader.onload = async function() {
+
+        const filedata = reader.result;
+
+        // Call edge function to upload the file
+        const { data, error } = await supabaseClient.functions.invoke('processjson', {
+            body: filedata
+        });
+
+        if (error) {
+            console.error('Error uploading file:', error);
+            $( "#wait" ).hide();
+
+            if (error instanceof FunctionsHttpError) {
+                const err = await error.context.json();
+                console.log('Function returned an error', err);
+                $( "#result" ).show().text(`Error uploading file: ${err.message}\n`);
+            }
+            else {
+                $( "#result" ).show().text(`Error uploading file: ${error.message}\n`);
+            }
+
+        } else {
+            console.log('File uploaded successfully');
+            $( "#wait" ).hide();
+            $( "#result" ).show().html(JSON.stringify(data.data));
+        }
+    };
+
+    reader.readAsText(file);
+
+}
 
 async function uploadImage(file)
 {
@@ -227,7 +278,14 @@ async function uploadImage64(file)
     if (error2) {
         console.error('Error processing file:', error2);
         $( "#wait" ).hide();
-        $( "#result" ).show().text(error2);
+        if (error2 instanceof FunctionsHttpError) {
+            const err = await error2.context.json();
+            console.log('Function returned an error', err);
+            $( "#result" ).show().text(`Error uploading file: ${err.message}\n`);
+        }
+        else {
+            $( "#result" ).show().text(`Error uploading file: ${error2.message}\n`);
+        }
         return false;
     } else {
         let elapsed = bm.get();
