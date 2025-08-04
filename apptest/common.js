@@ -50,3 +50,21 @@ export async function getFunctionError(error) {
 
     return null;
 }
+
+export async function invokeFunction(functionName, body) {
+
+    try {
+        const { data, error } = await supabaseClient.functions.invoke(functionName, { body: JSON.stringify(body) });
+
+        let responseError = await getFunctionError(error);
+        if (responseError) {
+            return { data: data, error: responseError };
+        }
+
+        return { data: data, error: null };
+
+    } catch (err) {
+        console.error(`Error invoking ${functionName} function:`, err);
+        return { data: null, error: { message: err.message, code: -1 } };
+    }
+}

@@ -1,4 +1,4 @@
-import { getSbClient, getStripeClient, getFunctionError } from './common.js'; // Import the Supabase API client
+import { getSbClient, getStripeClient, invokeFunction } from './common.js'; // Import the Supabase API client
 
 const supabase = getSbClient();
 const stripe = getStripeClient();
@@ -38,31 +38,19 @@ async function initialize() {
 
     document.querySelector("#payment-form").addEventListener("submit", (e) => handleSubmit(e, checkout));
 
-    let data, error;
-    try {
-        ({ data, error } = await supabase.functions.invoke('checkoutsession', { body:
-            JSON.stringify({
-                priceId: priceId,
-            })
-        }));
-    }
-    catch (err) {
-        console.error("Error creating checkout session:", err);
-        showError("Error creating checkout session: " + err.message, -1);
-    }
+    const { data, error } = await invokeFunction('checkoutsession', { priceId: priceId });
+    
+    if (error) {
+      if (error.code == -2) {
 
-    let responseError = await getFunctionError(error);
-    if (responseError) {
-
-        if (responseError.code == -2) {
             console.log('User is not authenticated, redirecting to login page');
             let redirect = "checkout.html?priceId=" + priceId + "&quantity=" + "1"
             window.location.href = "login.html?redir=" + encodeURIComponent(redirect); // Redirect to login page if not authenticated
             return;
-        }
+      }
 
-        showError(responseError.message, responseError.code);
-        return;
+      showError(error.message, error.code);
+      return;
     }
     
     if (!data) {
