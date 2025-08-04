@@ -1,4 +1,4 @@
-import { getUser } from './sbapi.js'; // Import the Supabase API client
+import { getUser } from './common.js'; // Import the Supabase API client
 
 $( async function() {
     const user = await getUser();
