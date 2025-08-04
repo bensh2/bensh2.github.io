@@ -1,4 +1,4 @@
-import { getSbClient, getFunctionError } from './common.js'; // Import the Supabase API client
+import { getSbClient, getFunctionError, invokeFunction } from './common.js'; // Import the Supabase API client
 
 const supabase = getSbClient();
 
@@ -15,23 +15,10 @@ async function initialize() {
     return;*/
   }
 
-  let data, error;
+  const { data, error } = await invokeFunction('sessionstatus', { session_id: sessionId });
 
-  try {
-     ({ data, error } = await supabase.functions.invoke('sessionstatus', {  body: 
-            JSON.stringify({
-                session_id: sessionId,
-            })
-     }));
-  }
-  catch (err) {
-    console.error("Error invoking sessionstatus function:", err);
-    processError("Error invoking sessionstatus function: " + err.message);
-  }
-
-  let responseError = await getFunctionError(error);
-  if (responseError) {
-    processError(responseError.message);
+  if (error) {
+    processError(error.message);
     return;
   }
 
