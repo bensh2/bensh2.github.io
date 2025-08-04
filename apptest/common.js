@@ -54,7 +54,13 @@ export async function getFunctionError(error) {
 export async function invokeFunction(functionName, body) {
 
     try {
-        const { data, error } = await supabaseClient.functions.invoke(functionName, { body: JSON.stringify(body) });
+
+        let payload = body;
+        if (body && body.constructor === ({}).constructor)  {  // check if body is a JSON object
+            payload = JSON.stringify(body);
+        }
+
+        const { data, error } = await supabaseClient.functions.invoke(functionName, { body: payload });
 
         let responseError = await getFunctionError(error);
         if (responseError) {
