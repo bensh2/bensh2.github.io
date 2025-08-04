@@ -1,6 +1,6 @@
 // esm version
-import { sbApiClient } from './sbapi.js'; // Import the Supabase API client
-const supabaseClient = sbApiClient();
+import { getSbClient } from './common.js'; // Import the Supabase API client
+const supabaseClient = getSbClient();
 
 let noncevalue; 
 initialize();

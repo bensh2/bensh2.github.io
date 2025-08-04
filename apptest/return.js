@@ -1,7 +1,6 @@
-import { sbApiClient } from './sbapi.js'; // Import the Supabase API client
-import { FunctionsHttpError, FunctionsRelayError, FunctionsFetchError } from "https://esm.sh/@supabase/supabase-js";
+import { getSbClient, getFunctionError } from './common.js'; // Import the Supabase API client
 
-const supabase = sbApiClient();
+const supabase = getSbClient();
 
 initialize();
 
@@ -10,36 +9,32 @@ async function initialize() {
   const urlParams = new URLSearchParams(queryString);
   const sessionId = urlParams.get("session_id");
   const priceId = urlParams.get("priceId");
-  /*const response = await fetch(`/session-status?session_id=${sessionId}`);
-  const session = await response.json();*/
 
   if (!sessionId) {
     /*processError("Missing session_id in the URL");
     return;*/
   }
 
-  //debugger
+  let data, error;
 
-  const { data, error } = await supabase.functions.invoke('sessionstatus', {  body: 
+  try {
+     ({ data, error } = await supabase.functions.invoke('sessionstatus', {  body: 
             JSON.stringify({
                 session_id: sessionId,
             })
-    });
+     }));
+  }
+  catch (err) {
+    console.error("Error invoking sessionstatus function:", err);
+    processError("Error invoking sessionstatus function: " + err.message);
+  }
 
-  if (error) {
-    //document.getElementById("status").textContent = "Error fetching session status";
-    if (error instanceof FunctionsHttpError) {
-        const errorMessage = await error.context.json();
-        processError(errorMessage.message);
-    } else if (error instanceof FunctionsRelayError) {
-        processError('Function relay error:<br>' +  error.message);
-    } else if (error instanceof FunctionsFetchError) {
-        processError('Function fetch error:<br>' +  error.message);
-    } else {
-        processError('Unknown error:<br>' +  error);
-    }
+  let responseError = await getFunctionError(error);
+  if (responseError) {
+    processError(responseError.message);
     return;
   }
+
   if (!data) {
     //document.getElementById("status").textContent = "No session found";
     processError("No session found");

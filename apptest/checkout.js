@@ -1,28 +1,19 @@
-import { sbApiClient } from './sbapi.js'; // Import the Supabase API client
-import { FunctionsHttpError, FunctionsRelayError, FunctionsFetchError } from "https://esm.sh/@supabase/supabase-js";
+import { getSbClient, getStripeClient, getFunctionError } from './common.js'; // Import the Supabase API client
 
-const supabase = sbApiClient();
+const supabase = getSbClient();
+const stripe = getStripeClient();
 
-// This is a public sample test API key.
-// Don’t submit any personally identifiable information in requests made with this key.
-// Sign in to see your own test API key embedded in code samples.
-const stripe = Stripe("pk_test_51RRWjTQon05XhpcyWjlrDgMcbzX7YiMcyOaCMKbIPdutrfFxqpUIikiqZqf1SCKh0uoEoSkpRnvgiKhXprXFQXB900pda3kx79");
-
-let checkout;
 initialize();
 
-const validateEmail = async (email) => {
+/*const validateEmail = async (email) => {
   const updateResult = await checkout.updateEmail(email);
   const isValid = updateResult.type !== "error";
 
   return { isValid, message: !isValid ? updateResult.error.message : null };
-};
-
-document
-  .querySelector("#payment-form")
-  .addEventListener("submit", handleSubmit);
+};*/
 
 function showPaymentElement() {
+  // Hide the spinner and show the payment element
   const spinner = document.querySelector(".spinner-div");
   if (spinner) {
     spinner.classList.add("d-none");
@@ -36,12 +27,8 @@ function showPaymentElement() {
 
 // Fetches a Checkout Session and captures the client secret
 async function initialize() {
-  /*const promise = fetch("/create-checkout-session", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((r) => r.json())
-    .then((r) => r.clientSecret);*/
+
+    let checkout;
 
     const priceId = new URLSearchParams(window.location.search).get("priceId");
     if (!priceId) {
@@ -49,90 +36,71 @@ async function initialize() {
         return;
     }
 
-    const { data, error } = await supabase.functions.invoke('checkoutsession', {  body: 
+    document.querySelector("#payment-form").addEventListener("submit", (e) => handleSubmit(e, checkout));
+
+    let data, error;
+    try {
+        ({ data, error } = await supabase.functions.invoke('checkoutsession', { body:
             JSON.stringify({
                 priceId: priceId,
             })
-    });
+        }));
+    }
+    catch (err) {
+        console.error("Error creating checkout session:", err);
+        showError("Error creating checkout session: " + err.message, -1);
+    }
 
-    if (error instanceof FunctionsHttpError) {
-        const errorMessage = await error.context.json();
+    let responseError = await getFunctionError(error);
+    if (responseError) {
 
-        if (errorMessage.code == -2) {
+        if (responseError.code == -2) {
             console.log('User is not authenticated, redirecting to login page');
             let redirect = "checkout.html?priceId=" + priceId + "&quantity=" + "1"
             window.location.href = "login.html?redir=" + encodeURIComponent(redirect); // Redirect to login page if not authenticated
             return;
         }
-        showError(errorMessage.message, errorMessage.code);
-        return;
 
-    } else if (error instanceof FunctionsRelayError) {
-        //console.log('Relay error:', error.message);
-        showError(error.message);
+        showError(responseError.message, responseError.code);
         return;
-    } else if (error instanceof FunctionsFetchError) {
-        //console.log('Fetch error:', error.message)
-        showError(error.message);
-        return;
-    } 
-
-    if (!data || error) {
+    }
+    
+    if (!data) {
         //console.error("Error creating checkout session:", error);
-        showError("Error creating checkout session:" + error.message);
+        showError("Error retrieving checkout session data", -1);
         return;
     }
 
     // insert email into html element
     document.getElementById("email").value = data.email;
 
-    const appearance = {
-        theme: 'stripe',
-    };
+    const appearance = { theme: 'stripe' };
 
-    checkout = await stripe.initCheckout({
-        fetchClientSecret: () => data.clientSecret,
-        elementsOptions: { appearance },
-    });
+    try {
+      checkout = await stripe.initCheckout({
+          fetchClientSecret: () => data.clientSecret,
+          elementsOptions: { appearance },
+      });
+    } 
+    catch (error) {
+      console.error("Error initializing checkout:", error);
+      showError("Error initializing checkout", -1);
+      return;
+    }
 
     document.querySelector("#button-text").textContent = `Pay ${checkout.session().total.total.amount} now`;
     const emailInput = document.getElementById("email");
     const emailErrors = document.getElementById("email-errors");
-
-    /*emailInput.addEventListener("input", () => {
-        // Clear any validation errors
-        emailErrors.textContent = "";
-    });
-
-    emailInput.addEventListener("blur", async () => {
-        const newEmail = emailInput.value;
-        if (!newEmail) {
-        return;
-        }
-
-        const { isValid, message } = await validateEmail(newEmail);
-        if (!isValid) {
-        emailErrors.textContent = message;
-        }
-    });*/
 
     const paymentElement = checkout.createPaymentElement();
     paymentElement.mount("#payment-element");
     showPaymentElement()
 }
 
-async function handleSubmit(e) {
+async function handleSubmit(e, checkout) {
+
   e.preventDefault();
   setLoading(true);
-
-  // email is already provided in the checkout session
-  /*const email = document.getElementById("email").value;
-  const { isValid, message } = await validateEmail(email);
-  if (!isValid) {
-    showMessage(message);
-    setLoading(false);
-    return;
-  }*/
 
   const { error } = await checkout.confirm();
 

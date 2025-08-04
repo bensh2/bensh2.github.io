@@ -1,7 +1,6 @@
-import { sbApiClient } from './sbapi.js'; // Import the Supabase API client
-import { FunctionsHttpError, FunctionsRelayError, FunctionsFetchError } from "https://esm.sh/@supabase/supabase-js";
+import { getSbClient, getFunctionError } from './common.js'; // Import the Supabase API client
 
-const supabase = sbApiClient();
+const supabase = getSbClient();
 
 initialize();
 

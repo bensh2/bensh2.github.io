@@ -20,8 +20,8 @@
     <button class="btn btn-primary" id="indexButton">Go back to index page</button>
 </div>
 <script type="module">
-    import { sbApiClient } from './sbapi.js'; // Import the Supabase API client
-    const supabaseClient = sbApiClient();
+    import { getSbClient } from './common.js'; // Import the Supabase API client
+    const supabaseClient = getSbClient();
 
     const logoutMessage = document.getElementById('logoutMessage');
     const loginButton = document.getElementById('loginButton');
