@@ -33,9 +33,7 @@ async function initialize() {
     //window.replace("http://localhost:4242/checkout.html")
     window.replace("checkout.html?priceId=" + priceId);
   } else if (data.status == "complete") {
-    document.getElementById("status").classList.add("d-none");
-    document.getElementById("success").classList.remove("d-none");
-    //document.getElementById("customer-email").textContent = data.customer_email
+    purchaseComplete(data);
   } else if (data.status == "expired") {
     document.getElementById("status").textContent = "Session expired";
   } else {
@@ -43,9 +41,60 @@ async function initialize() {
   }
 }
 
+async function purchaseComplete(data)
+{
+    document.getElementById("status").classList.add("d-none");
+    document.getElementById("success").classList.remove("d-none");
+    //document.getElementById("customer-email").textContent = data.customer_email
+    let product = await getPurchase(data.purchaseid);
+    if (!product) {
+        processError("Unable to fetch purchase data");
+        return;
+    }
+
+    showPurchase(product);
+}
+
 function processError(msg) {
   document.getElementById("errorMessage").innerHTML = "Error fetching session status: " + msg;
   document.getElementById("error").classList.remove("d-none");
   document.getElementById("status").classList.add("d-none");
   console.error(msg);
+}
+
+async function getPurchase(purchaseid)
+{
+  let data, error;
+  try {
+    ({ data, error } = await supabase.from('userproducts').select().eq('purchaseid', purchaseid).maybeSingle());
+  }
+  catch (err) {
+    processError("Error fetching purchase data:", err);
+    return false;
+  }
+
+  if (error) {
+      processError("Unable to fetch user products");
+      return false;
+  }
+
+  return data;
+}
+
+function showPurchase(product)
+{
+  let datetime;
+  try {
+    const date = new Date(product.created * 1000);
+    datetime = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+  } catch (err) {
+    datetime = "N/A";
+  }
+
+  let prdtype = (product.producttype == "p" ? "Purchase" : product.producttype == "s" ? "Subscription" : "");
+  
+  document.getElementById("product-name").textContent = product.productname + " (" + prdtype + ")";
+  document.getElementById("product-time").textContent = datetime;
+  document.getElementById("product-price").textContent = product.payment_amount + " (" + String(product.payment_currency).toUpperCase() + ")";
+
 }

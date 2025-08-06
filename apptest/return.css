@@ -4,3 +4,9 @@
 .spinner-border {
     width: 5rem; height: 5rem;
 }
+
+.productdetails {
+    margin: 0 auto;
+    max-width: 600px;
+    text-align: center;
+}
